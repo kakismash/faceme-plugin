@@ -8,20 +8,6 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 
 import android.content.Context;
 
-import com.cyberlink.faceme.FaceMeSdk;
-import com.cyberlink.faceme.LicenseManager;
-import com.cyberlink.faceme.FaceMeRecognizer;
-import com.cyberlink.faceme.RecognizerConfig;
-import com.cyberlink.faceme.DetectionModelSpeedLevel;
-import com.cyberlink.faceme.ExtractConfig;
-import com.cyberlink.faceme.ExtractionOption;
-import com.cyberlink.faceme.EnginePreference;
-import com.cyberlink.faceme.ExtractionModelSpeedLevel;
-import com.cyberlink.faceme.DetectionOutputOrder;
-import com.cyberlink.faceme.RecognizerMode;
-import com.cyberlink.faceme.DetectionSpeedLevel;
-import com.cyberlink.faceme.DetectionMode;
-
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
 
@@ -39,6 +25,6 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void inizialize(PluginCall call) {
         String licenseKey = call.getString("licenseKey");
-        FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
+        return implementation.inizialize(licenseKey);
     }
 }

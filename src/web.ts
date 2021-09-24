@@ -9,6 +9,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   }
 
   async inizialize(licenseKey: string): Promise<string> {
+    console.log('inizialize: ', licenseKey);
     return licenseKey;
   }
 }
