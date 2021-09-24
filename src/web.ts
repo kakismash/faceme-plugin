@@ -7,4 +7,8 @@ export class FacemeWeb extends WebPlugin implements FacemePlugin {
     console.log('ECHO', options);
     return options;
   }
+
+  async inizialize(licenseKey: string): Promise<string> {
+    return licenseKey;
+  }
 }
