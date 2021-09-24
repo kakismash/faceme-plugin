@@ -37,16 +37,8 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void inizialize(String licenseKey) {
-        if (licenseKey != null) {
-            try {
-                FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
-                callback.onCallback(licenseKey);
-            } catch (Exception e) {
-                callback.error("Something went wrong. " + e);
-            }
-        } else {
-            callback.error("Please don't pass null values.");
-        }
+    public void inizialize(PluginCall call) {
+        String licenseKey = call.getString("licenseKey");
+        FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
     }
 }
