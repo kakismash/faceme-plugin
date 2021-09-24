@@ -21,6 +21,12 @@ public class FaceMe {
     }
 
     public String inizialize(String licenseKey) {
-        FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
+        try {
+            FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
+            return 'Plugin Inizialized successfully';
+        } catch (Exception e) {
+            return 'Error: ' + e;
+        }
+        
     }
 }

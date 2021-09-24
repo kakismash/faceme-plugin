@@ -23,7 +23,7 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void inizialize(PluginCall call) {
+    public String inizialize(PluginCall call) {
         String licenseKey = call.getString("licenseKey");
         return implementation.inizialize(licenseKey);
     }
