@@ -1,7 +1,6 @@
 # node files
 dist
 node_modules
-
 # iOS files
 Pods
 Podfile.lock
@@ -10,7 +9,8 @@ xcuserdata
 
 # macOS files
 .DS_Store
-
+.history
+libs
 
 
 # Based on Android gitignore template: https://github.com/github/gitignore/blob/HEAD/Android.gitignore
