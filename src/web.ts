@@ -4,11 +4,12 @@ import type { FaceMePlugin } from './definitions';
 
 export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+    console.log(options.value);
+    throw new Error('Method not implemented.');
   }
 
-  async inizialize(licenseKey: string): Promise<string> {
+  async initialize(options: { value: string }): Promise<{ value: string }> {
+    console.log(options.value);
     throw new Error('Method not implemented.');
   }
 }

@@ -14,7 +14,7 @@ npx cap sync
 <docgen-index>
 
 * [`echo(...)`](#echo)
-* [`inizialize(...)`](#inizialize)
+* [`initialize(...)`](#initialize)
 
 </docgen-index>
 
@@ -36,15 +36,15 @@ echo(options: { value: string; }) => any
 --------------------
 
 
-### inizialize(...)
+### initialize(...)
 
 ```typescript
-inizialize(licenseKey: string) => any
+initialize(options: { value: string; }) => any
 ```
 
-| Param            | Type                |
-| ---------------- | ------------------- |
-| **`licenseKey`** | <code>string</code> |
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>any</code>
 

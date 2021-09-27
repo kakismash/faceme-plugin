@@ -1,6 +1,6 @@
 export interface FaceMePlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
 
-  inizialize(licenseKey: string): Promise<string>;
+  initialize(options: {value: string }): Promise<{ value: string }>;
 
 }

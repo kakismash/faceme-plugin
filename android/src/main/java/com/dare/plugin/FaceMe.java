@@ -1,5 +1,7 @@
 package com.dare.plugin;
 
+import android.content.Context;
+
 import com.cyberlink.faceme.FaceMeSdk;
 import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.FaceMeRecognizer;
@@ -17,16 +19,16 @@ import com.cyberlink.faceme.DetectionMode;
 public class FaceMe {
 
     public String echo(String value) {
-        return value;
+        return "Return From ECHO";
     }
 
-    public String inizialize(String licenseKey) {
+    public String initialize(Context context, String licenseKey) {
         try {
+//            FaceMeSdk.isInitialized();
             FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
-            return 'Plugin Inizialized successfully';
+            return FaceMeSdk.version();
         } catch (Exception e) {
-            return 'Error: ' + e;
+            return "Error: " + e;
         }
-        
     }
 }

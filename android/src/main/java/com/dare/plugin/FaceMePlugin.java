@@ -6,8 +6,6 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-import android.content.Context;
-
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
 
@@ -23,8 +21,10 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public String inizialize(PluginCall call) {
+    public void initialize(PluginCall call) {
         String licenseKey = call.getString("licenseKey");
-        return implementation.inizialize(licenseKey);
+        JSObject ret = new JSObject();
+        ret.put("value", implementation.initialize(this.getContext(), licenseKey));
+        call.resolve(ret);
     }
 }
