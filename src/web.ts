@@ -12,4 +12,9 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     console.log(options.value);
     throw new Error('Method not implemented.');
   }
+
+  async detectBitmap(options: { presentationMs: number,  bitmap: string}): Promise<{ value: string }> {
+    console.log(options.presentationMs, options.bitmap);
+    throw new Error('Method not implemented.');
+  }
 }
