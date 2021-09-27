@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FaceMe {
 
-    private static final String TAG = "FaceMe.AmpleIRASAct";
+    private static final String TAG = "FaceMe";
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
     private static final long AUTO_HIDE_INTERVAL = 2_000L;
