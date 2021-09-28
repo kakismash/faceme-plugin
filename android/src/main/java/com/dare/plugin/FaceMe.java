@@ -2,6 +2,7 @@ package com.dare.plugin;
 
 import android.content.Context;
 
+import com.cyberlink.faceme.FaceFeatureScheme;
 import com.cyberlink.faceme.FaceMeSdk;
 import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.FaceMeRecognizer;
@@ -63,33 +64,55 @@ public class FaceMe {
         }
     }
 
-    private enrollingFace(FaceHolder faceHolder) {
-        initRecognizer(faceHolder);
+    private long enrollingFace(String collectionName) {
 
-        // Initializing configuration settings of DataManager
-        FaceFeatureScheme featureScheme     = faceMeRecognizer.getFeatureScheme();
+        // Initializing FaceMeRecognizer
+        FaceMeRecognizer faceMeRecognizer = initRecognizer();
+
+        // Init Face Data Manager
         FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
+
         int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
+
+        if (result < 0) {
+
+            throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
+
+        }
 
         // Enrolling a face into database
         long startIndex   = 0;
         int count         = 1;
         long collectionId = 0;
-        String name = "<!-- collection name -->";
-        QueryResult queryCollectionResult = dataManager.queryFaceCollectionByName(name, startIndex, count);
+        String name = collectionName;
+
+        QueryResult queryCollectionResult = faceMeDataManager.queryFaceCollectionByName(name, startIndex, count);
+
         if (queryCollectionResult == null || queryCollectionResult.resultIds.isEmpty()) {
-            collectionId = dataManager.createFaceCollection(name);
+
+            collectionId = faceMeDataManager.createFaceCollection(name);
+
         } else {
+
             collectionId = queryCollectionResult.resultIds.get(0);
-        } 
+
+        }
+
         FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
-        long faceId             = dataManager.addFace(collectionId, faceFeature);
+
+        long faceId             = faceMeDataManager.addFace(collectionId, faceFeature);
+
+        return faceId;
+
     }
 
-    private void initRecognizer(FaceHolder faceHolder) {
+    private FaceMeRecognizer initRecognizer() {
+
+        FaceMeRecognizer faceMeRecognizer = null;
+
         try {
             // Initializing configuration settings of Recognizer
-            FaceMeRecognizer faceMeRecognizer  = new FaceMeRecognizer();
+            faceMeRecognizer  = new FaceMeRecognizer();
             RecognizerConfig config            = new RecognizerConfig();
             config.preference                  = EnginePreference.PREFER_NONE;
             config.detectionModelSpeedLevel    = DetectionModelSpeedLevel.DEFAULT;
@@ -97,19 +120,17 @@ public class FaceMe {
             config.extractionModelSpeedLevel   = ExtractionModelSpeedLevel.VERY_HIGH;
             config.maxExtractionThreads        = 2;
             config.mode                        = RecognizerMode.IMAGE;
-            recognizerConfig.maxFrameHeight    = 1280;
-            recognizerConfig.maxFrameWidth     = 720;
-            recognizerConfig.minFaceWidthRatio = 0.15f;
 
             int result                         = faceMeRecognizer.initializeEx(config);
             if (result < 0) {
                 throw new IllegalStateException("Initialize recognizer failed: " + result);
             }
             // Always profiling in demo app.
-            boolean success = faceMeRecognizer.setProperty("Profiling", true);
-            if (!success) {
-                throw new IllegalStateException("Profiling recognizer failed");
-            }
+            // In The DEMO APP they recommend to do profile
+//            boolean success = faceMeRecognizer.setProperty("Profiling", true);
+//            if (!success) {
+//                throw new IllegalStateException("Profiling recognizer failed");
+//            }
 
             // Setting extraction options and configurations
             faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_SPEED_LEVEL, 
@@ -129,9 +150,11 @@ public class FaceMe {
             extractConfig.extractOcclusion   = true;
 
         } catch (Exception e) {
-            if (faceMeRecognizer != null) recognizer.release();
             throw e;
+        } finally {
+            return faceMeRecognizer;
         }
+
     }
 
     /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
