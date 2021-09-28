@@ -63,7 +63,7 @@ public class FaceMe {
         }
     }
 
-    private void register() {
+    private void enrollingFace() {
         FaceMeRecognizer recognizer = null;
         int result;
         try {
