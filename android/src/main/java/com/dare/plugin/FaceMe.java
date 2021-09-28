@@ -61,7 +61,7 @@ public class FaceMe {
         return "Return From ECHO";
     }
 
-    public void initialize(Context context, String licenseKey) {
+    public String initialize(Context context, String licenseKey) {
         try {
             FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
             return FaceMeSdk.version();
@@ -70,7 +70,7 @@ public class FaceMe {
         }
     }
 
-    public long enrollingFace(String collectionName, byte[] bytes) {
+    public long enrollingFace(byte[] bytes) {
 
         // Initializing FaceMeRecognizer
         FaceMeRecognizer faceMeRecognizer = initRecognizer();
