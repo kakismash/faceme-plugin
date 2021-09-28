@@ -30,8 +30,9 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void enrollingFace(PluginCall call) {
+        String collectionName = call.getString("collectionName");
         JSObject ret = new JSObject();
-        ret.put(implementation.register();
+        ret.put("value", implementation.enrollingFace(collectionName));
         call.resolve(ret);
     }
     

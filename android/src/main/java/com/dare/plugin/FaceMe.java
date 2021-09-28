@@ -64,7 +64,7 @@ public class FaceMe {
         }
     }
 
-    private long enrollingFace(String collectionName) {
+    public long enrollingFace(String collectionName) {
 
         // Initializing FaceMeRecognizer
         FaceMeRecognizer faceMeRecognizer = initRecognizer();
@@ -151,10 +151,8 @@ public class FaceMe {
 
         } catch (Exception e) {
             throw e;
-        } finally {
-            return faceMeRecognizer;
         }
-
+        return faceMeRecognizer;
     }
 
     /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
