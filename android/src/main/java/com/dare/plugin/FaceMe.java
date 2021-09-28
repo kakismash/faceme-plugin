@@ -88,8 +88,8 @@ public class FaceMe {
         faceFeature.featureData = fData;
         faceFeature.featureType = FeatureType.STANDARD_PRECISION;
 
-        collectionCount         = collectionCount + 1;
-        long faceId             = faceMeDataManager.addFace(collectionCount, faceFeature);
+        collectionCount = collectionCount + 1;
+        long faceId     = faceMeDataManager.addFace(collectionCount, faceFeature);
 
         return faceId;
     }
