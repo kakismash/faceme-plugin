@@ -63,44 +63,73 @@ public class FaceMe {
         }
     }
 
-    private void enrollingFace() {
-        FaceMeRecognizer recognizer = null;
-        int result;
+    private enrollingFace(FaceHolder faceHolder) {
+        initRecognizer(faceHolder);
+
+        // Initializing configuration settings of DataManager
+        FaceFeatureScheme featureScheme     = faceMeRecognizer.getFeatureScheme();
+        FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
+        int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
+
+        // Enrolling a face into database
+        long startIndex   = 0;
+        int count         = 1;
+        long collectionId = 0;
+        String name = "<!-- collection name -->";
+        QueryResult queryCollectionResult = dataManager.queryFaceCollectionByName(name, startIndex, count);
+        if (queryCollectionResult == null || queryCollectionResult.resultIds.isEmpty()) {
+            collectionId = dataManager.createFaceCollection(name);
+        } else {
+            collectionId = queryCollectionResult.resultIds.get(0);
+        } 
+        FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
+        long faceId             = dataManager.addFace(collectionId, faceFeature);
+    }
+
+    private void initRecognizer(FaceHolder faceHolder) {
         try {
-            recognizer                                 = new FaceMeRecognizer();
-            RecognizerConfig recognizerConfig          = new RecognizerConfig();
-            recognizerConfig.preference                = uiSettings.getEnginePreference();
-            recognizerConfig.detectionModelSpeedLevel  = DetectionModelSpeedLevel.DEFAULT;
-            recognizerConfig.maxDetectionThreads       = uiSettings.getEngineThreads();
-            recognizerConfig.extractionModelSpeedLevel = uiSettings.getExtractModel();
-            recognizerConfig.maxExtractionThreads      = uiSettings.getEngineThreads();
-            recognizerConfig.mode                      = RecognizerMode.VIDEO;
+            // Initializing configuration settings of Recognizer
+            FaceMeRecognizer faceMeRecognizer  = new FaceMeRecognizer();
+            RecognizerConfig config            = new RecognizerConfig();
+            config.preference                  = EnginePreference.PREFER_NONE;
+            config.detectionModelSpeedLevel    = DetectionModelSpeedLevel.DEFAULT;
+            config.maxDetectionThreads         = 2;
+            config.extractionModelSpeedLevel   = ExtractionModelSpeedLevel.VERY_HIGH;
+            config.maxExtractionThreads        = 2;
+            config.mode                        = RecognizerMode.IMAGE;
+            recognizerConfig.maxFrameHeight    = 1280;
+            recognizerConfig.maxFrameWidth     = 720;
+            recognizerConfig.minFaceWidthRatio = 0.15f;
 
-            Size previewSize                           = cameraController.getCurrentResolution();
-            recognizerConfig.maxFrameHeight            = previewSize.getHeight();
-            recognizerConfig.maxFrameWidth             = previewSize.getWidth();
-            recognizerConfig.minFaceWidthRatio         = uiSettings.getMinFaceWidthRatio();
-
-            result = recognizer.initializeEx(recognizerConfig);
+            int result                         = faceMeRecognizer.initializeEx(config);
             if (result < 0) {
                 throw new IllegalStateException("Initialize recognizer failed: " + result);
             }
             // Always profiling in demo app.
-            boolean success = recognizer.setProperty("Profiling", true);
+            boolean success = faceMeRecognizer.setProperty("Profiling", true);
             if (!success) {
                 throw new IllegalStateException("Profiling recognizer failed");
             }
-            recognizer.setExtractionOption(ExtractionOption.DETECTION_OUTPUT_ORDER, DetectionOutputOrder.CONFIDENCE);
-            recognizer.setExtractionOption(ExtractionOption.DETECTION_MODE, uiSettings.getDetectionMode());
 
-            fmRecognizer                     = recognizer;
+            // Setting extraction options and configurations
+            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_SPEED_LEVEL, 
+                                                    DetectionSpeedLevel.PRECISE);
+            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_OUTPUT_ORDER,
+                                                    DetectionOutputOrder.CONFIDENCE);
+            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_MODE, 
+                                                    DetectionMode.NORMAL);
 
-            extractConfig                    = new ExtractConfig();
+            ExtractConfig extractConfig      = new ExtractConfig();
             extractConfig.extractBoundingBox = true;
-            extractConfig.extractPose        = true;
             extractConfig.extractFeature     = false;
+            extractConfig.extractAge         = false;
+            extractConfig.extractGender      = false;
+            extractConfig.extractEmotion     = false;
+            extractConfig.extractPose        = false;
+            extractConfig.extractOcclusion   = true;
+
         } catch (Exception e) {
-            if (recognizer != null) recognizer.release();
+            if (faceMeRecognizer != null) recognizer.release();
             throw e;
         }
     }
