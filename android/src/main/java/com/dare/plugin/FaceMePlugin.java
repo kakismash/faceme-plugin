@@ -29,7 +29,7 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void initialize(PluginCall call) {
         String licenseKey = call.getString("value");
-        JSObject ret = new JSObject();
+        JSObject ret      = new JSObject();
         ret.put("value", implementation.initialize(this.getContext(), licenseKey));
         call.resolve(ret);
     }
@@ -37,10 +37,9 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void enrollingFace(PluginCall call) {
         String collectionName = call.getString("collectionName");
-
-        String imageBase64 = call.getString("imageBase64");
-        byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-        JSObject ret = new JSObject();
+        String imageBase64    = call.getString("imageBase64");
+        byte[] decodedString  = Base64.decode(imageBase64, Base64.DEFAULT);
+        JSObject ret          = new JSObject();
         ret.put("value", implementation.enrollingFace(decodedString));
         call.resolve(ret);
     }
