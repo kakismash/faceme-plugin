@@ -54,7 +54,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FaceMe {
 
     private FaceMeRecognizer fmRecognizer;
-
     private long collectionCount = 0;
 
     public String echo(String value) {
@@ -71,25 +70,20 @@ public class FaceMe {
     }
 
     public long enrollingFace(byte[] bytes) {
-
         // Initializing FaceMeRecognizer
         FaceMeRecognizer faceMeRecognizer = initRecognizer();
 
         // Init Face Data Manager
         FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
-
         int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
 
         if (result < 0) {
-
             throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
-
         }
 
         FaceFeature faceFeature = new FaceFeature();
-
-        FeatureData fData = new FeatureData();
-        fData.data = bytesToFloats(bytes);
+        FeatureData fData       = new FeatureData();
+        fData.data              = bytesToFloats(bytes);
         faceFeature.featureData = fData;
         faceFeature.featureType = FeatureType.STANDARD_PRECISION;
 
@@ -118,12 +112,6 @@ public class FaceMe {
             if (result < 0) {
                 throw new IllegalStateException("Initialize recognizer failed: " + result);
             }
-            // Always profiling in demo app.
-            // In The DEMO APP they recommend to do profile
-//            boolean success = faceMeRecognizer.setProperty("Profiling", true);
-//            if (!success) {
-//                throw new IllegalStateException("Profiling recognizer failed");
-//            }
 
             // Setting extraction options and configurations
             faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_SPEED_LEVEL, 
