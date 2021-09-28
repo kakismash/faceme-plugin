@@ -22,7 +22,7 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void initialize(PluginCall call) {
-        String licenseKey = call.getString("licenseKey");
+        String licenseKey = call.getString("value");
         JSObject ret = new JSObject();
         ret.put("value", implementation.initialize(this.getContext(), licenseKey));
         call.resolve(ret);
