@@ -29,11 +29,9 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void detectBitmap(PluginCall call) {
-        long presentationMs = Integer.parseInt(call.getString("presentationMs"));
-        //here Bitmap
+    public void register(PluginCall call) {
         JSObject ret = new JSObject();
-        ret.put("value", implementation.detectBitmap(presentationMs, bitmap);
+        ret.put(implementation.register();
         call.resolve(ret);
     }
     

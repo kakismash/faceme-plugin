@@ -48,51 +48,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FaceMe {
 
-    private static final String TAG = "FaceMe";
-    private static final boolean DEBUG = BuildConfig.DEBUG;
-
-    private static final long AUTO_HIDE_INTERVAL = 2_000L;
-    private static final long MINIMUM_BITMAP_CACHE_TIME = 500L;
-    private static final long FAIL_RUN_TIME_INTERVAL = 3_000L;
-    private static final long DARKEN_BACKLIGHT_INTERVAL = 10_000L;
-    private static final double BOUNDING_BOX_OVERLAP_ALLOWED_RATIO = 0.8;
-
-    private InfraredDumpHandler infraredDumpHandler;
-    private LivenessIRDetectionHandler livenessIRDetectionHandler;
-    private StatUiHandler statUiHandler;
-
-    private final ArrayList<View> viewsAutoHide = new ArrayList<>();
-    private final ArrayList<View> viewsDevTool = new ArrayList<>();
-    private final AtomicBoolean dumpImageFlag = new AtomicBoolean(false);
-
-    private int previousFacesCount = 0;
-
-    private final AtomicBoolean isRecognizing = new AtomicBoolean(false);
-    private final AtomicBoolean hasRecognitionFeature = new AtomicBoolean(false);
-    private final AtomicBoolean isShowingResult = new AtomicBoolean(false);
-    private final AtomicBoolean isNewFace = new AtomicBoolean(true);
-    private final AtomicReference<Bitmap> lastDetectBitmapQueue = new AtomicReference<>(null);
-
-    private Handler recognizerHandler;
     private FaceMeRecognizer fmRecognizer;
-    private ExtractConfig extractConfig;
-    private float confidenceThreshold;
-    private FaceMeDataManager fmDataManager;
-    private float defaultScreenBrightness;
-
-    private FaceHolder visitorFace = null;
-
-    private final Runnable darkenScreenLighterRunnable = () -> {
-        setScreenLighter(0.0f);
-    };
 
     public String echo(String value) {
         return "Return From ECHO";
     }
 
-    public String initialize(Context context, String licenseKey) {
+    public void initialize(Context context, String licenseKey) {
         try {
-//            FaceMeSdk.isInitialized();
             FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
             return FaceMeSdk.version();
         } catch (Exception e) {
@@ -100,7 +63,49 @@ public class FaceMe {
         }
     }
 
-    private void detectBitmap(long presentationMs, Bitmap bitmap) {
+    private void register() {
+        FaceMeRecognizer recognizer = null;
+        int result;
+        try {
+            recognizer                                 = new FaceMeRecognizer();
+            RecognizerConfig recognizerConfig          = new RecognizerConfig();
+            recognizerConfig.preference                = uiSettings.getEnginePreference();
+            recognizerConfig.detectionModelSpeedLevel  = DetectionModelSpeedLevel.DEFAULT;
+            recognizerConfig.maxDetectionThreads       = uiSettings.getEngineThreads();
+            recognizerConfig.extractionModelSpeedLevel = uiSettings.getExtractModel();
+            recognizerConfig.maxExtractionThreads      = uiSettings.getEngineThreads();
+            recognizerConfig.mode                      = RecognizerMode.VIDEO;
+
+            Size previewSize                           = cameraController.getCurrentResolution();
+            recognizerConfig.maxFrameHeight            = previewSize.getHeight();
+            recognizerConfig.maxFrameWidth             = previewSize.getWidth();
+            recognizerConfig.minFaceWidthRatio         = uiSettings.getMinFaceWidthRatio();
+
+            result = recognizer.initializeEx(recognizerConfig);
+            if (result < 0) {
+                throw new IllegalStateException("Initialize recognizer failed: " + result);
+            }
+            // Always profiling in demo app.
+            boolean success = recognizer.setProperty("Profiling", true);
+            if (!success) {
+                throw new IllegalStateException("Profiling recognizer failed");
+            }
+            recognizer.setExtractionOption(ExtractionOption.DETECTION_OUTPUT_ORDER, DetectionOutputOrder.CONFIDENCE);
+            recognizer.setExtractionOption(ExtractionOption.DETECTION_MODE, uiSettings.getDetectionMode());
+
+            fmRecognizer                     = recognizer;
+
+            extractConfig                    = new ExtractConfig();
+            extractConfig.extractBoundingBox = true;
+            extractConfig.extractPose        = true;
+            extractConfig.extractFeature     = false;
+        } catch (Exception e) {
+            if (recognizer != null) recognizer.release();
+            throw e;
+        }
+    }
+
+    /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
         if (fmRecognizer == null || (livenessIRDetectionHandler!= null && livenessIRDetectionHandler.isDetecting())) {
             isRecognizing.set(false);
             return;
@@ -164,73 +169,6 @@ public class FaceMe {
         }
         isRecognizing.set(false);
     }
-
-    private void faceCountCheck(int previousFacesCount, int facesCount) {
-        if (previousFacesCount == 0 && facesCount == 0) return;
-        if (previousFacesCount != 0 && facesCount != 0) return;
-
-        if (previousFacesCount == 0) { // If faces appear in camera, Brighten the screen backlight.
-            mainHandler.removeCallbacks(darkenScreenLighterRunnable);
-            mainHandler.post(() -> {
-                setScreenLighter(defaultScreenBrightness);
-            });
-        } else { // If faces don't exist, darken the screen backlight.
-            mainHandler.postDelayed(darkenScreenLighterRunnable, DARKEN_BACKLIGHT_INTERVAL);
-        }
-    }
-
-    private void getDefaultScreenBrightness() {
-        Window window = this.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        defaultScreenBrightness = params.screenBrightness;
-    }
-
-    private void setScreenLighter(float brightness) {
-        Window window = this.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.screenBrightness = brightness;
-        window.setAttributes(params);
-    }
-
-    private PresentFacesHolder biggestFaceChoose(long presentationMs, ArrayList<FaceHolder> faces) {
-        if (faces.size() <= 1) {
-            return new PresentFacesHolder(presentationMs, faces);
-        }
-
-        // If there are more than 1 faces, choose the biggest face bigger than the others 20%.
-        faces.size();
-        int biggestFace = 0;
-        int biggestFaceArea = 0;
-        int secondBiggestFaceArea = 0;
-        for (int index = 0 ; index < faces.size() ; index++) {
-            FaceHolder face = faces.get(index);
-            int faceArea = face.faceInfo.boundingBox.height() * face.faceInfo.boundingBox.width();
-            if (faceArea > biggestFaceArea) {
-                if (biggestFaceArea != 0) {
-                    secondBiggestFaceArea = biggestFaceArea;
-                }
-                biggestFaceArea = faceArea;
-                biggestFace = index;
-            } else {
-                if (faceArea > secondBiggestFaceArea) {
-                    secondBiggestFaceArea = faceArea;
-                }
-            }
-        }
-
-        ArrayList<FaceHolder> targetFace = new ArrayList<>();
-        if (biggestFaceArea > (int) (secondBiggestFaceArea * 1.2)) {
-            targetFace.add(faces.get(biggestFace));
-            return new PresentFacesHolder(presentationMs, targetFace);
-        } else {
-            return new PresentFacesHolder(presentationMs, faces);
-        }
-    }
-
-    public void notifyDumpInfraredIfNeeded(PresentFacesHolder presentFaces, int width, int height, byte[] data) {
-        InfraredDumpHandler infraredDumpHandler = this.infraredDumpHandler;
-        if (infraredDumpHandler != null) {
-            infraredDumpHandler.dumpInfrared(presentFaces, width, height, data);
-        }
-    }
+*/
+    
 }

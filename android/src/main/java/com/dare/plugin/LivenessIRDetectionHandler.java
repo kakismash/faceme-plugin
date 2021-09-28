@@ -1,11 +1,4 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * CyberLink FaceMe (R) SDK
- * Copyright (C) 2021 CyberLink Corp. All rights reserved.
- * https://www.cyberlink.com
- */
-package com.cyberlink.facemedemo.pages.ampleinfrareddas;
+package com.dare.plugin;
 
 import android.content.Context;
 import android.graphics.Bitmap;
