@@ -70,4 +70,11 @@ public class FaceMePlugin extends Plugin {
         call.resolve(ret);
     }
     
+    @PluginMethod
+    public void deleteFace(PluginCall call) {
+        long faceId = Long.parseLong(call.getString("faceId"));
+        JSObject ret      = new JSObject();
+        ret.put("value", implementation.deleteFace(faceId);
+        call.resolve(ret);
+    }
 }

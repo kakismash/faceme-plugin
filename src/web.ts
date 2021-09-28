@@ -34,4 +34,9 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
+  async deleteFace(options: { faceId: number }): Promise<{ value: string }> {
+    console.log(options.faceId);
+    throw new Error('Method not implemented.');
+  }
+
 }

@@ -135,7 +135,7 @@ public class FaceMe {
 
     public boolean changeCollectionName(long collectionId, String name) {
         if (collectionId == null || collectionId < 0 || name == null || name == "") {
-            throw new IllegalStateException("The collectionId or name can't be null");
+            throw new IllegalStateException("CollectionId or name can't be null");
         }
         faceMeDataManager   = new FaceMeDataManager();
         return faceMeDataManager.setFaceCollectionName(collectionId, name);
@@ -143,7 +143,7 @@ public class FaceMe {
 
     public String getCollectionName(long collectionId) {
         if (collectionId == null || collectionId < 0) {
-            throw new IllegalStateException("The collectionId can't be null");
+            throw new IllegalStateException("CollectionId can't be null");
         } 
         String name       = "";
         faceMeDataManager = new FaceMeDataManager();
@@ -153,6 +153,14 @@ public class FaceMe {
         } else {
             return name;
         }
+    }
+
+    public boolean deleteFace(long faceId) {
+        if (faceId == null || faceId < 0) {
+            throw new IllegalStateException("FaceId can't be null");
+        }
+        faceMeDataManager   = new FaceMeDataManager();
+        return faceMeDataManager.deleteFace(faceId);
     }
     
 }

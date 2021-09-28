@@ -10,4 +10,6 @@ export interface FaceMePlugin {
   changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: string }>;
 
   getCollectionName(options: { collectionId: number }): Promise<{ name: string }>;
+
+  deleteFace(options: { faceId: number }): Promise<{ value: string }>;
 }
