@@ -13,12 +13,12 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
-  async enrollingFace(options: { imageBase64: string }): Promise<{ value: string }> {
+  async enrollingFace(options: { imageBase64: string }): Promise<{ faceId: string }> {
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
   }
 
-  async searchFace(options: { imageBase64: string }): Promise<{ value: string }> {
+  async searchFace(options: { imageBase64: string }): Promise<{ faceId: string }> {
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
   }
