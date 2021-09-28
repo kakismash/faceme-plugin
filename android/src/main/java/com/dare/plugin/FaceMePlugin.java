@@ -44,5 +44,14 @@ public class FaceMePlugin extends Plugin {
         ret.put("faceId", implementation.enrollingFace(decodedString));
         call.resolve(ret);
     }
+
+    @PluginMethod
+    public void searchFace(PluginCall call) {
+        String imageBase64   = call.getString("imageBase64");
+        byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+        JSObject ret         = new JSObject();
+        ret.put("faceId", implementation.recognizingPeople(decodedString));
+        call.resolve(ret);
+    }
     
 }

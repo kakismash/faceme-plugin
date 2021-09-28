@@ -2,11 +2,9 @@ package com.dare.plugin;
 
 import android.content.Context;
 
-import com.cyberlink.faceme.FaceFeatureScheme;
 import com.cyberlink.faceme.FaceMeSdk;
 import com.cyberlink.faceme.FeatureData;
 import com.cyberlink.faceme.FeatureType;
-import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.FaceMeRecognizer;
 import com.cyberlink.faceme.RecognizerConfig;
 import com.cyberlink.faceme.DetectionModelSpeedLevel;
@@ -18,81 +16,39 @@ import com.cyberlink.faceme.DetectionOutputOrder;
 import com.cyberlink.faceme.RecognizerMode;
 import com.cyberlink.faceme.DetectionSpeedLevel;
 import com.cyberlink.faceme.DetectionMode;
-import com.cyberlink.faceme.FaceAttribute;
 import com.cyberlink.faceme.FaceFeature;
-import com.cyberlink.faceme.FaceInfo;
-import com.cyberlink.faceme.FaceLandmark;
-import com.cyberlink.faceme.FaceLivenessStatus;
 import com.cyberlink.faceme.FaceMeDataManager;
-import com.cyberlink.faceme.LicenseManager;
-import com.cyberlink.faceme.QueryResult;
-import com.cyberlink.faceme.RecognizerMode;
 import com.cyberlink.faceme.SimilarFaceResult;
 import com.cyberlink.faceme.PrecisionLevel;
 
-import android.graphics.Bitmap;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Size;
-import android.view.TextureView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FaceMe {
 
-    private FaceMeRecognizer fmRecognizer;
+    private FaceMeRecognizer faceMeRecognizer   = null;
+    private FaceMeDataManager faceMeDataManager = null;
     private long collectionCount = 0;
-
-    public String echo(String value) {
-        return "Return From ECHO";
-    }
 
     public String initialize(Context context, String licenseKey) {
         try {
             FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
+
+            faceMeRecognizer = initRecognizer();
+
+            faceMeDataManager = new FaceMeDataManager();
+            int result        = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
+
+            if (result < 0) {
+                throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
+            }
+
             return FaceMeSdk.version();
         } catch (Exception e) {
             return "Error: " + e;
         }
     }
 
-    public long enrollingFace(byte[] bytes) {
-        // Initializing FaceMeRecognizer
-        FaceMeRecognizer faceMeRecognizer = initRecognizer();
-
-        // Init Face Data Manager
-        FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
-        int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
-
-        if (result < 0) {
-            throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
-        }
-
-        FaceFeature faceFeature = new FaceFeature();
-        FeatureData fData       = new FeatureData();
-        fData.data              = bytesToFloats(bytes);
-        faceFeature.featureData = fData;
-        faceFeature.featureType = FeatureType.STANDARD_PRECISION;
-
-        collectionCount = collectionCount + 1;
-        long faceId     = faceMeDataManager.addFace(collectionCount, faceFeature);
-
-        return faceId;
-    }
 
     private FaceMeRecognizer initRecognizer() {
 
@@ -115,12 +71,12 @@ public class FaceMe {
             }
 
             // Setting extraction options and configurations
-            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_SPEED_LEVEL, 
-                                                    DetectionSpeedLevel.PRECISE);
+            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_SPEED_LEVEL,
+                    DetectionSpeedLevel.PRECISE);
             faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_OUTPUT_ORDER,
-                                                    DetectionOutputOrder.CONFIDENCE);
-            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_MODE, 
-                                                    DetectionMode.NORMAL);
+                    DetectionOutputOrder.CONFIDENCE);
+            faceMeRecognizer.setExtractionOption(ExtractionOption.DETECTION_MODE,
+                    DetectionMode.NORMAL);
 
             ExtractConfig extractConfig      = new ExtractConfig();
             extractConfig.extractBoundingBox = true;
@@ -137,6 +93,48 @@ public class FaceMe {
         return faceMeRecognizer;
     }
 
+    public String echo(String value) {
+        return "Return From ECHO";
+    }
+
+    public long enrollingFace(byte[] bytes) {
+
+        FaceFeature faceFeature = buildFaceFeature(bytes);
+
+        collectionCount = collectionCount + 1;
+        long faceId     = faceMeDataManager.addFace(collectionCount, faceFeature);
+
+        return faceId;
+    }
+
+    public long recognizingPeople(byte[] bytes) {
+        // Init Face Data Manager
+
+        int precisionLevel        = PrecisionLevel.LEVEL_1E6;
+        float confidenceThreshold = faceMeDataManager.getPrecisionThreshold(precisionLevel);
+
+        // Get face template from the target face
+        FaceFeature faceFeature = buildFaceFeature(bytes);
+
+        // Get search results from database
+        long faceId;
+        List<SimilarFaceResult> searchResult = faceMeDataManager.searchSimilarFace(confidenceThreshold, -1, faceFeature, 1);
+        if (searchResult != null && !searchResult.isEmpty()) {
+            SimilarFaceResult result = searchResult.get(0);
+            return result.faceId;
+        } else {
+            return -1;
+        }
+    }
+
+    private FaceFeature buildFaceFeature(byte[] bytes) {
+        FaceFeature faceFeature =new FaceFeature();
+        FeatureData fData       = new FeatureData();
+        fData.data              = bytesToFloats(bytes);
+        faceFeature.featureData = fData;
+        faceFeature.featureType = FeatureType.STANDARD_PRECISION;
+        return faceFeature;
+    }
 
     // Just in case the other doesn't work
     private float[] bytesToFloats(byte[] bytes) {
@@ -146,98 +144,5 @@ public class FaceMe {
         ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
         return floats;
     }
-
-    private long recognizingPeople(byte[] bytes) {
-        // Init Face Data Manager
-        FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
-        int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
-
-        if (result < 0) {
-            throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
-        }
-
-        // Get confidence threshold from precision level
-        int precisionLevel        = PrecisionLevel.LEVEL_1E6;
-        float confidenceThreshold = faceMeDataManager.getPrecisionThreshold(precisionLevel);
-
-        // Get face template from the target face
-        FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
-
-        // Get search results from database
-        long faceId;
-        List<SimilarFaceResult> searchResult = faceMeDataManager.searchSimilarFace(confidenceThreshold, -1, byte, 1);
-        if (searchResult != null && !searchResult.isEmpty()) {
-            SimilarFaceResult result = searchResult.get(0);
-            return result.faceId;
-        } else {
-            return -1;
-        }
-    }
-
-    /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
-        if (fmRecognizer == null || (livenessIRDetectionHandler!= null && livenessIRDetectionHandler.isDetecting())) {
-            isRecognizing.set(false);
-            return;
-        }
-        Bitmap oldBitmap = lastDetectBitmapQueue.getAndSet(bitmap);
-        if (oldBitmap != null) {
-            oldBitmap.recycle();
-        }
-
-        int facesCount = fmRecognizer.extractFace(extractConfig, Collections.singletonList(bitmap));
-        ArrayList<FaceHolder> faces = new ArrayList<>();
-        if (facesCount > 0) {
-            for (int faceIndex = 0; faceIndex < facesCount; faceIndex++) {
-                FaceInfo faceInfo = fmRecognizer.getFaceInfo(0, faceIndex);
-                FaceLandmark faceLandmark = fmRecognizer.getFaceLandmark(0, faceIndex);
-                FaceAttribute faceAttr = fmRecognizer.getFaceAttribute(0, faceIndex);
-                FaceFeature faceFeature = fmRecognizer.getFaceFeature(0, faceIndex);
-
-                Bitmap faceBitmap = getCropFaceBitmap(bitmap, faceInfo.boundingBox);
-
-                FaceHolder holder = new FaceHolder(faceInfo, faceLandmark, faceAttr, faceFeature, faceBitmap);
-
-                faces.add(holder);
-            }
-        }
-        faceCountCheck(previousFacesCount, facesCount);
-        previousFacesCount = facesCount;
-        PresentFacesHolder presentFaces = biggestFaceChoose(presentationMs, faces);
-
-        if (hasRecognitionFeature.get()) {
-            if (visitorFace != null) {
-                if (faces.size() == 0 || !isFaceExist(visitorFace, faces)) { // If visitor leave, start the new process to do anti-spoofing detect.
-                    visitorFace = null;
-                    extractConfig.extractFeature = false;
-                    mainHandler.post(() -> {
-                        livenessResult.setVisibility(View.GONE);
-                        Log.v(TAG, "Liveness Result GONE.");
-                    });
-                    Log.v(TAG, "Visitor disappear.");
-                    isNewFace.set(true);
-                    hasRecognitionFeature.set(false);
-                }
-            }
-        }
-
-        onExtracted(bitmap, presentFaces);
-
-        int total = 0, detect = 0, extract = 0, recognize = 0;
-        boolean gotProfiling = false;
-
-        PerformanceStatus perfStatus = PerformanceStatus.make(fmRecognizer.getProperty("Performance"));
-        if (perfStatus != null) {
-            gotProfiling = true;
-            if (perfStatus.total != null) total = perfStatus.total;
-            if (perfStatus.detect != null) detect = perfStatus.detect;
-            if (perfStatus.extract != null) extract = perfStatus.extract;
-        }
-        if (statListener != null) {
-            statListener.onFacesExtracted();
-            if (gotProfiling) statListener.onFacesRecognized(facesCount, total, detect, extract, recognize);
-        }
-        isRecognizing.set(false);
-    }
-*/
     
 }
