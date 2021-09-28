@@ -28,6 +28,7 @@ import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.QueryResult;
 import com.cyberlink.faceme.RecognizerMode;
 import com.cyberlink.faceme.SimilarFaceResult;
+import com.cyberlink.faceme.PrecisionLevel;
 
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -99,7 +100,7 @@ public class FaceMe {
 
         try {
             // Initializing configuration settings of Recognizer
-            faceMeRecognizer  = new FaceMeRecognizer();
+            faceMeRecognizer                   = new FaceMeRecognizer();
             RecognizerConfig config            = new RecognizerConfig();
             config.preference                  = EnginePreference.PREFER_NONE;
             config.detectionModelSpeedLevel    = DetectionModelSpeedLevel.DEFAULT;
@@ -138,12 +139,42 @@ public class FaceMe {
 
 
     // Just in case the other doesn't work
-    public float[] bytesToFloats(byte[] bytes) {
+    private float[] bytesToFloats(byte[] bytes) {
         if (bytes.length % Float.BYTES != 0)
             throw new RuntimeException("Illegal length");
         float floats[] = new float[bytes.length / Float.BYTES];
         ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
         return floats;
+    }
+
+    private long recognizingPeople(byte[] bytes) {
+        // Init Face Data Manager
+        FaceMeDataManager faceMeDataManager = new FaceMeDataManager();
+        int result                          = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
+
+        if (result < 0) {
+            throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
+        }
+
+        // Get confidence threshold from precision level
+        int precisionLevel        = PrecisionLevel.LEVEL_1E6;
+        float confidenceThreshold = faceMeDataManager.getPrecisionThreshold(precisionLevel);
+
+        // Get face template from the target face
+        FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
+
+        // Get search results from database
+        long collectionId;
+        long faceId;
+        float confidence;
+        String name;
+        List<SimilarFaceResult> searchResult = faceMeDataManager.searchSimilarFace(confidenceThreshold, -1, byte, 1);
+        if (searchResult != null && !searchResult.isEmpty()) {
+            SimilarFaceResult result = searchResult.get(0);
+            return result.faceId;
+        } else {
+            return -1;
+        }
     }
 
     /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
