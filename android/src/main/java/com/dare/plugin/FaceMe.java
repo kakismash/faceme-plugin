@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.cyberlink.faceme.FaceFeatureScheme;
 import com.cyberlink.faceme.FaceMeSdk;
+import com.cyberlink.faceme.FeatureData;
+import com.cyberlink.faceme.FeatureType;
 import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.FaceMeRecognizer;
 import com.cyberlink.faceme.RecognizerConfig;
@@ -27,6 +29,7 @@ import com.cyberlink.faceme.QueryResult;
 import com.cyberlink.faceme.RecognizerMode;
 import com.cyberlink.faceme.SimilarFaceResult;
 
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Size;
@@ -39,6 +42,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +54,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FaceMe {
 
     private FaceMeRecognizer fmRecognizer;
+
+    private long collectionCount = 0;
 
     public String echo(String value) {
         return "Return From ECHO";
@@ -64,7 +70,7 @@ public class FaceMe {
         }
     }
 
-    public long enrollingFace(String collectionName) {
+    public long enrollingFace(String collectionName, byte[] bytes) {
 
         // Initializing FaceMeRecognizer
         FaceMeRecognizer faceMeRecognizer = initRecognizer();
@@ -80,30 +86,17 @@ public class FaceMe {
 
         }
 
-        // Enrolling a face into database
-        long startIndex   = 0;
-        int count         = 1;
-        long collectionId = 0;
-        String name = collectionName;
+        FaceFeature faceFeature = new FaceFeature();
 
-        QueryResult queryCollectionResult = faceMeDataManager.queryFaceCollectionByName(name, startIndex, count);
+        FeatureData fData = new FeatureData();
+        fData.data = bytesToFloats(bytes);
+        faceFeature.featureData = fData;
+        faceFeature.featureType = FeatureType.STANDARD_PRECISION;
 
-        if (queryCollectionResult == null || queryCollectionResult.resultIds.isEmpty()) {
-
-            collectionId = faceMeDataManager.createFaceCollection(name);
-
-        } else {
-
-            collectionId = queryCollectionResult.resultIds.get(0);
-
-        }
-
-        FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
-
-        long faceId             = faceMeDataManager.addFace(collectionId, faceFeature);
+        collectionCount = collectionCount + 1;
+        long faceId             = faceMeDataManager.addFace(collectionCount, faceFeature);
 
         return faceId;
-
     }
 
     private FaceMeRecognizer initRecognizer() {
@@ -153,6 +146,16 @@ public class FaceMe {
             throw e;
         }
         return faceMeRecognizer;
+    }
+
+
+    // Just in case the other doesn't work
+    public float[] bytesToFloats(byte[] bytes) {
+        if (bytes.length % Float.BYTES != 0)
+            throw new RuntimeException("Illegal length");
+        float floats[] = new float[bytes.length / Float.BYTES];
+        ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
+        return floats;
     }
 
     /*private void detectBitmap(long presentationMs, Bitmap bitmap) {
