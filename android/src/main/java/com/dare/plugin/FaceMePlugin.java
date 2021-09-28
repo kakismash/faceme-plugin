@@ -37,10 +37,9 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void enrollingFace(PluginCall call) {
         String collectionName = call.getString("collectionName");
-
-        String imageBase64   = call.getString("imageBase64");
-        byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-        JSObject ret         = new JSObject();
+        String imageBase64    = call.getString("imageBase64");
+        byte[] decodedString  = Base64.decode(imageBase64, Base64.DEFAULT);
+        JSObject ret          = new JSObject();
         ret.put("faceId", implementation.enrollingFace(decodedString));
         call.resolve(ret);
     }

@@ -28,32 +28,25 @@ public class FaceMe {
 
     private FaceMeRecognizer faceMeRecognizer   = null;
     private FaceMeDataManager faceMeDataManager = null;
-    private long collectionCount = 0;
+    private long collectionCount                = 0;
 
     public String initialize(Context context, String licenseKey) {
         try {
             FaceMeSdk.initialize(context.getApplicationContext(), licenseKey);
-
-            faceMeRecognizer = initRecognizer();
-
+            faceMeRecognizer  = initRecognizer();
             faceMeDataManager = new FaceMeDataManager();
             int result        = faceMeDataManager.initializeEx(faceMeRecognizer.getFeatureScheme());
-
             if (result < 0) {
                 throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
             }
-
             return FaceMeSdk.version();
         } catch (Exception e) {
             return "Error: " + e;
         }
     }
 
-
     private FaceMeRecognizer initRecognizer() {
-
         FaceMeRecognizer faceMeRecognizer = null;
-
         try {
             // Initializing configuration settings of Recognizer
             faceMeRecognizer                   = new FaceMeRecognizer();
@@ -98,18 +91,14 @@ public class FaceMe {
     }
 
     public long enrollingFace(byte[] bytes) {
-
         FaceFeature faceFeature = buildFaceFeature(bytes);
-
-        collectionCount = collectionCount + 1;
-        long faceId     = faceMeDataManager.addFace(collectionCount, faceFeature);
-
+        collectionCount         = collectionCount + 1;
+        long faceId             = faceMeDataManager.addFace(collectionCount, faceFeature);
         return faceId;
     }
 
     public long recognizingPeople(byte[] bytes) {
-        // Init Face Data Manager
-
+        // Get confidence threshold from precision level
         int precisionLevel        = PrecisionLevel.LEVEL_1E6;
         float confidenceThreshold = faceMeDataManager.getPrecisionThreshold(precisionLevel);
 
@@ -128,7 +117,7 @@ public class FaceMe {
     }
 
     private FaceFeature buildFaceFeature(byte[] bytes) {
-        FaceFeature faceFeature =new FaceFeature();
+        FaceFeature faceFeature = new FaceFeature();
         FeatureData fData       = new FeatureData();
         fData.data              = bytesToFloats(bytes);
         faceFeature.featureData = fData;
