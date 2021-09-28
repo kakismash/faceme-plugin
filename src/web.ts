@@ -22,4 +22,16 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
   }
+
+  async changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: string }> {
+    console.log(options.collectionId);
+    console.log(options.name);
+    throw new Error('Method not implemented.');
+  }
+
+  async getCollectionName(options: { collectionId: number }): Promise<{ name: string }> {
+    console.log(options.collectionId);
+    throw new Error('Method not implemented.');
+  }
+
 }

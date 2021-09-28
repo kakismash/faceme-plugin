@@ -46,7 +46,6 @@ public class FaceMe {
     }
 
     private FaceMeRecognizer initRecognizer() {
-        FaceMeRecognizer faceMeRecognizer = null;
         try {
             // Initializing configuration settings of Recognizer
             faceMeRecognizer                   = new FaceMeRecognizer();
@@ -132,6 +131,28 @@ public class FaceMe {
         float floats[] = new float[bytes.length / Float.BYTES];
         ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
         return floats;
+    }
+
+    public boolean changeCollectionName(long collectionId, String name) {
+        if (collectionId == null || collectionId < 0 || name == null || name == "") {
+            throw new IllegalStateException("The collectionId or name can't be null");
+        }
+        faceMeDataManager   = new FaceMeDataManager();
+        return faceMeDataManager.setFaceCollectionName(collectionId, name);
+    }
+
+    public String getCollectionName(long collectionId) {
+        if (collectionId == null || collectionId < 0) {
+            throw new IllegalStateException("The collectionId can't be null");
+        } 
+        String name       = "";
+        faceMeDataManager = new FaceMeDataManager();
+        name              = faceMeDataManager.getFaceCollectionName(collectionId);
+        if (name == "") {
+            return "Collection not found";
+        } else {
+            return name;
+        }
     }
     
 }

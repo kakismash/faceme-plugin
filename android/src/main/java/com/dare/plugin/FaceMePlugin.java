@@ -11,6 +11,7 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.nio.charset.StandardCharsets;
+import java.lang.Long;
 
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
@@ -20,7 +21,6 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void echo(PluginCall call) {
         String value = call.getString("value");
-
         JSObject ret = new JSObject();
         ret.put("value", implementation.echo(value));
         call.resolve(ret);
@@ -50,6 +50,23 @@ public class FaceMePlugin extends Plugin {
         byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
         JSObject ret         = new JSObject();
         ret.put("faceId", implementation.recognizingPeople(decodedString));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void changeCollectionName(PluginCall call) {
+        long collectionId = Long.parseLong(call.getString("collectionId"));
+        Sring name        = call.getString("name");
+        JSObject ret      = new JSObject();
+        ret.put("value", implementation.changeCollectionName(collectionId, name);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void getCollectionName(PluginCall call) {
+        long collectionId = Long.parseLong(call.getString("collectionId"));
+        JSObject ret      = new JSObject();
+        ret.put("name", implementation.getCollectionName(collectionId);
         call.resolve(ret);
     }
     

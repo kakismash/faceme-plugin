@@ -7,4 +7,7 @@ export interface FaceMePlugin {
 
   searchFace(options: { imageBase64: string }): Promise<{ faceId: string }>;
 
+  changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: string }>;
+
+  getCollectionName(options: { collectionId: number }): Promise<{ name: string }>;
 }
