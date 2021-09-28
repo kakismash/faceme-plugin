@@ -29,7 +29,7 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void register(PluginCall call) {
+    public void enrollingFace(PluginCall call) {
         JSObject ret = new JSObject();
         ret.put(implementation.register();
         call.resolve(ret);
