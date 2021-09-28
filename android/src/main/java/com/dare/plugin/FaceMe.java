@@ -164,10 +164,7 @@ public class FaceMe {
         FaceFeature faceFeature = faceMeRecognizer.getFaceFeature(0, 0);
 
         // Get search results from database
-        long collectionId;
         long faceId;
-        float confidence;
-        String name;
         List<SimilarFaceResult> searchResult = faceMeDataManager.searchSimilarFace(confidenceThreshold, -1, byte, 1);
         if (searchResult != null && !searchResult.isEmpty()) {
             SimilarFaceResult result = searchResult.get(0);
