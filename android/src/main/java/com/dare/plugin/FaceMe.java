@@ -266,13 +266,15 @@ public class FaceMe {
         return label + " (" + error + ")";
     }
     
-    public boolean changeCollectionName(Long collectionId, String name) {
+    public boolean changeCollectionName(Long collectionId, 
+                                        String name) {
 
         if (collectionId == null || collectionId < 0 || name == null || name == "") {
             throw new IllegalStateException("CollectionId or name can't be null");
         }
 
-        return faceMeDataManager.setFaceCollectionName(collectionId, name);
+        return faceMeDataManager.setFaceCollectionName(collectionId, 
+                                                       name);
     }
 
     public String getCollectionName(Long collectionId) {
@@ -296,7 +298,7 @@ public class FaceMe {
         if (faceId == null || faceId < 0) {
             throw new IllegalStateException("FaceId can't be null");
         }
-        
+
         return faceMeDataManager.deleteFace(faceId);
     }
 
