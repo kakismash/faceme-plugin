@@ -56,9 +56,9 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void changeCollectionName(PluginCall call) {
         long collectionId = Long.parseLong(call.getString("collectionId"));
-        Sring name        = call.getString("name");
+        String name        = call.getString("name");
         JSObject ret      = new JSObject();
-        ret.put("value", implementation.changeCollectionName(collectionId, name);
+        ret.put("value", implementation.changeCollectionName(collectionId, name));
         call.resolve(ret);
     }
 
@@ -66,7 +66,7 @@ public class FaceMePlugin extends Plugin {
     public void getCollectionName(PluginCall call) {
         long collectionId = Long.parseLong(call.getString("collectionId"));
         JSObject ret      = new JSObject();
-        ret.put("name", implementation.getCollectionName(collectionId);
+        ret.put("name", implementation.getCollectionName(collectionId));
         call.resolve(ret);
     }
     
@@ -74,7 +74,7 @@ public class FaceMePlugin extends Plugin {
     public void deleteFace(PluginCall call) {
         long faceId       = Long.parseLong(call.getString("faceId"));
         JSObject ret      = new JSObject();
-        ret.put("value", implementation.deleteFace(faceId);
+        ret.put("value", implementation.deleteFace(faceId));
         call.resolve(ret);
     }
 }

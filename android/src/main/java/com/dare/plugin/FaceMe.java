@@ -148,7 +148,7 @@ public class FaceMe {
         return floats;
     }
 
-    public boolean changeCollectionName(long collectionId, String name) {
+    public boolean changeCollectionName(Long collectionId, String name) {
         // License verification to prevent local license expiration
         checkLicense();
 
@@ -159,7 +159,7 @@ public class FaceMe {
         return faceMeDataManager.setFaceCollectionName(collectionId, name);
     }
 
-    public String getCollectionName(long collectionId) {
+    public String getCollectionName(Long collectionId) {
         // License verification to prevent local license expiration
         checkLicense();
 
@@ -176,7 +176,7 @@ public class FaceMe {
         }
     }
 
-    public boolean deleteFace(long faceId) {
+    public boolean deleteFace(Long faceId) {
         // License verification to prevent local license expiration
         checkLicense();
 
