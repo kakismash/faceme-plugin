@@ -1,11 +1,17 @@
 package com.dare.plugin;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import com.cyberlink.faceme.FMLicenseManager;
+import com.cyberlink.faceme.LicenseManager;
 import com.cyberlink.faceme.FaceMeSdk;
 import com.cyberlink.faceme.FaceFeature;
 import com.cyberlink.faceme.FaceMeDataManager;
@@ -24,6 +30,7 @@ import com.cyberlink.faceme.PrecisionLevel;
 import com.cyberlink.faceme.EnginePreference;
 import com.cyberlink.faceme.SimilarFaceResult;
 import com.cyberlink.faceme.ExtractionModelSpeedLevel;
+import com.cyberlink.faceme.QueryResult;
 
 public class FaceMe {
 
@@ -120,7 +127,7 @@ public class FaceMe {
 
         if (result != null &&
             !result.isEmpty()) {
-            SimilarFaceResult faceResult = searchResult.get(0);
+            SimilarFaceResult faceResult = result.get(0);
 
             collectionId = faceResult.collectionId;
         }
@@ -146,7 +153,7 @@ public class FaceMe {
 
         if (facesCount > 0) {
 
-            if(faceCount > 1){
+            if(facesCount > 1){
                 throw new IllegalStateException("Too many faces in image (" + facesCount + ")");
             }
 
@@ -210,13 +217,15 @@ public class FaceMe {
             throw new IllegalStateException("Failed initializing FaceMe license manager: " + errorLabel(result));
         }
 
-        result = licenseManager.registerLicense()
+        result = licenseManager.registerLicense();
 
         if(result < 0){
             throw new IllegalStateException("Failed registering FaceMe license: " + errorLabel(result));
         }
 
         licenseManager.release();
+
+        return result;
     }
 
     // Just in case the other doesn't work
