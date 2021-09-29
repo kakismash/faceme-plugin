@@ -155,7 +155,6 @@ public class FaceMe {
         if (collectionId == null || collectionId < 0 || name == null || name == "") {
             throw new IllegalStateException("CollectionId or name can't be null");
         }
-        faceMeDataManager = new FaceMeDataManager();
         return faceMeDataManager.setFaceCollectionName(collectionId, name);
     }
 
@@ -167,7 +166,6 @@ public class FaceMe {
             throw new IllegalStateException("CollectionId can't be null");
         } 
         String name       = "";
-        faceMeDataManager = new FaceMeDataManager();
         name              = faceMeDataManager.getFaceCollectionName(collectionId);
         if (name == "") {
             return "Collection not found";
@@ -183,7 +181,6 @@ public class FaceMe {
         if (faceId == null || faceId < 0) {
             throw new IllegalStateException("FaceId can't be null");
         }
-        faceMeDataManager   = new FaceMeDataManager();
         return faceMeDataManager.deleteFace(faceId);
     }
 
