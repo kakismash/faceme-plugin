@@ -147,7 +147,7 @@ public class FaceMe {
         if (facesCount > 0) {
 
             if(faceCount > 1){
-                throw new IllegalStateException('Too many faces in image (' + facesCount + ')');
+                throw new IllegalStateException("Too many faces in image (" + facesCount + ")");
             }
 
             feature = recognizer.getFaceFeature(0, 0);
@@ -240,6 +240,6 @@ public class FaceMe {
             label = "Error";
         }
 
-        return label + " (" error + ")";
+        return label + " (" + error + ")";
     }
 }

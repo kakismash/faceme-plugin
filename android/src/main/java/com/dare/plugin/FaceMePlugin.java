@@ -39,7 +39,7 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void enrollingFace(PluginCall call) {
+    public void enroll(PluginCall call) {
         JSObject ret           = new JSObject();
         String   name          = call.getString("name");
         String   imageBase64   = call.getString("imageBase64");
@@ -52,7 +52,7 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void searchFace(PluginCall call) {
+    public void search(PluginCall call) {
         JSObject ret         = new JSObject();
         String imageBase64   = call.getString("imageBase64");
         byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
