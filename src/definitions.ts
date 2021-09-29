@@ -7,9 +7,9 @@ export interface FaceMePlugin {
 
   search(options: { imageBase64: string }): Promise<{ collectionId: string }>;
 
-  changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: void }>;
+  changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: boolean }>;
 
   getCollectionName(options: { collectionId: number }): Promise<{ name: string }>;
 
-  deleteFace(options: { faceId: number }): Promise<{ value: void }>;
+  deleteFace(options: { faceId: number }): Promise<{ value: boolean }>;
 }

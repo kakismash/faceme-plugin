@@ -23,7 +23,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
-  async changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: void }> {
+  async changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     console.log(options.name);
     throw new Error('Method not implemented.');
@@ -34,7 +34,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
-  async deleteFace(options: { faceId: number }): Promise<{ value: void }> {
+  async deleteFace(options: { faceId: number }): Promise<{ value: boolean }> {
     console.log(options.faceId);
     throw new Error('Method not implemented.');
   }
