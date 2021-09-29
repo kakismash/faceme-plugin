@@ -11,6 +11,7 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.nio.charset.StandardCharsets;
+import java.lang.Long;
 
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
@@ -23,7 +24,7 @@ public class FaceMePlugin extends Plugin {
         JSObject ret   = new JSObject();
 
         ret.put("value",
-                implementation.echo(value));
+        implementation.echo(value));
         call.resolve(ret);
     }
 
@@ -59,6 +60,31 @@ public class FaceMePlugin extends Plugin {
 
         ret.put("collectionId",
                 implementation.recognize(decodedString));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void changeCollectionName(PluginCall call) {
+        long collectionId = Long.parseLong(call.getString("collectionId"));
+        String name        = call.getString("name");
+        JSObject ret      = new JSObject();
+        ret.put("value", implementation.changeCollectionName(collectionId, name));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void getCollectionName(PluginCall call) {
+        long collectionId = Long.parseLong(call.getString("collectionId"));
+        JSObject ret      = new JSObject();
+        ret.put("name", implementation.getCollectionName(collectionId));
+        call.resolve(ret);
+    }
+    
+    @PluginMethod
+    public void deleteFace(PluginCall call) {
+        long faceId       = Long.parseLong(call.getString("faceId"));
+        JSObject ret      = new JSObject();
+        ret.put("value", implementation.deleteFace(faceId));
         call.resolve(ret);
     }
 }

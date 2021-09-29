@@ -6,4 +6,10 @@ export interface FaceMePlugin {
   enroll(options: { imageBase64: string, name: string }): Promise<{ collectionId: string }>;
 
   search(options: { imageBase64: string }): Promise<{ collectionId: string }>;
+
+  changeCollectionName(options: { collectionId: number, name: string }): Promise<{ value: string }>;
+
+  getCollectionName(options: { collectionId: number }): Promise<{ name: string }>;
+
+  deleteFace(options: { faceId: number }): Promise<{ value: string }>;
 }

@@ -37,6 +37,7 @@ public class FaceMe {
     private FaceMeRecognizer  recognizer  = null;
     private FaceMeDataManager dataManager = null;
     private static final Map<Integer, String> errors = errorMap();
+    private long collectionCount                = 0;
 
     private static Map<Integer, String> errorMap() {
         Map<Integer, String> map = new HashMap<>();
@@ -78,7 +79,6 @@ public class FaceMe {
 
     public String initialize(Context context,
                              String license) {
-
         try {
             initSdk(context, license);
             verifyLicense();
@@ -172,7 +172,6 @@ public class FaceMe {
     private FaceMeDataManager initDataManager(FaceMeRecognizer recognizer){
         FaceMeDataManager manager = new FaceMeDataManager();
         int               result  = manager.initializeEx(recognizer.getFeatureScheme());
-
         if (result < 0) {
             throw new IllegalStateException("Failed initializing FaceMe Data Manager: " + errorLabel(result));
         }
@@ -208,7 +207,7 @@ public class FaceMe {
         return recognizer;
     }
 
-    private int verifyLicense() {
+      private int verifyLicense() {
         LicenseManager licenseManager = new LicenseManager();
 
         int result = licenseManager.initializeEx();
@@ -227,6 +226,19 @@ public class FaceMe {
 
         return result;
     }
+      
+    private FaceFeature buildFaceFeature(byte[] bytes) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
+        FaceFeature faceFeature = new FaceFeature();
+        FeatureData fData       = new FeatureData();
+        fData.data              = bytesToFloats(bytes);
+        faceFeature.featureData = fData;
+        faceFeature.featureType = FeatureType.STANDARD_PRECISION;
+        return faceFeature;
+
+    }
 
     // Just in case the other doesn't work
     private float[] bytesToFloats(byte[] bytes) {
@@ -242,7 +254,8 @@ public class FaceMe {
         return floats;
     }
 
-    private String errorLabel(int error){
+
+  private String errorLabel(int error){
         String label = errors.get(error);
 
         if(label != null){
@@ -250,5 +263,58 @@ public class FaceMe {
         }
 
         return label + " (" + error + ")";
+    }
+    public boolean changeCollectionName(Long collectionId, String name) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
+        if (collectionId == null || collectionId < 0 || name == null || name == "") {
+            throw new IllegalStateException("CollectionId or name can't be null");
+        }
+        return faceMeDataManager.setFaceCollectionName(collectionId, name);
+    }
+
+    public String getCollectionName(Long collectionId) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
+        if (collectionId == null || collectionId < 0) {
+            throw new IllegalStateException("CollectionId can't be null");
+        } 
+        String name       = "";
+        name              = faceMeDataManager.getFaceCollectionName(collectionId);
+        if (name == "") {
+            return "Collection not found";
+        } else {
+            return name;
+        }
+    }
+
+    public boolean deleteFace(Long faceId) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
+        if (faceId == null || faceId < 0) {
+            throw new IllegalStateException("FaceId can't be null");
+        }
+        return faceMeDataManager.deleteFace(faceId);
+    }
+
+    private void checkLicense() {
+        try {
+            licenseManager = new LicenseManager();
+            int result     = licenseManager.initializeEx();
+            if (result < 0) { 
+                throw new IllegalStateException("Initialize license manager failed: " + result);
+            }
+            result = licenseManager.registerLicense();
+            if (result < 0) {
+                throw new IllegalStateException("Register license failed: " + result);
+            }
+        } finally {
+            if (licenseManager != null) {
+                licenseManager.release();
+            }
+        }
     }
 }
