@@ -54,9 +54,9 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void search(PluginCall call) {
-        JSObject ret         = new JSObject();
-        String imageBase64   = call.getString("imageBase64");
-        byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+        JSObject ret           = new JSObject();
+        String   imageBase64   = call.getString("imageBase64");
+        byte[]   decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
 
         ret.put("collectionId",
                 implementation.recognize(decodedString));
@@ -65,26 +65,33 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void changeCollectionName(PluginCall call) {
-        long collectionId = Long.parseLong(call.getString("collectionId"));
-        String name        = call.getString("name");
-        JSObject ret      = new JSObject();
-        ret.put("value", implementation.changeCollectionName(collectionId, name));
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+        String   name         = call.getString("name");
+        
+        ret.put("value", 
+                implementation.changeCollectionName(collectionId, 
+                                                    name));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void getCollectionName(PluginCall call) {
-        long collectionId = Long.parseLong(call.getString("collectionId"));
-        JSObject ret      = new JSObject();
-        ret.put("name", implementation.getCollectionName(collectionId));
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+        
+        ret.put("name", 
+                implementation.getCollectionName(collectionId));
         call.resolve(ret);
     }
     
     @PluginMethod
     public void deleteFace(PluginCall call) {
-        long faceId       = Long.parseLong(call.getString("faceId"));
-        JSObject ret      = new JSObject();
-        ret.put("value", implementation.deleteFace(faceId));
+        JSObject ret    = new JSObject();
+        long     faceId = Long.parseLong(call.getString("faceId"));
+        
+        ret.put("value", 
+                implementation.deleteFace(faceId));
         call.resolve(ret);
     }
 }
