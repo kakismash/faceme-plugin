@@ -20,6 +20,7 @@ import com.cyberlink.faceme.FaceFeature;
 import com.cyberlink.faceme.FaceMeDataManager;
 import com.cyberlink.faceme.SimilarFaceResult;
 import com.cyberlink.faceme.PrecisionLevel;
+import com.cyberlink.faceme.LicenseManager;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -28,6 +29,7 @@ public class FaceMe {
 
     private FaceMeRecognizer faceMeRecognizer   = null;
     private FaceMeDataManager faceMeDataManager = null;
+    private LicenseManager licenseManager       = null;
     private long collectionCount                = 0;
 
     public String initialize(Context context, String licenseKey) {
@@ -39,6 +41,7 @@ public class FaceMe {
             if (result < 0) {
                 throw new IllegalStateException("Initialize FaceMeDataManager failed: " + result);
             }
+            checkLicense();
             return FaceMeSdk.version();
         } catch (Exception e) {
             return "Error: " + e;
@@ -46,6 +49,9 @@ public class FaceMe {
     }
 
     private FaceMeRecognizer initRecognizer() {
+        // License verification to prevent local license expiration
+        checkLicense();
+        
         try {
             // Initializing configuration settings of Recognizer
             faceMeRecognizer                   = new FaceMeRecognizer();
@@ -90,6 +96,9 @@ public class FaceMe {
     }
 
     public long enrollingFace(byte[] bytes) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         FaceFeature faceFeature = buildFaceFeature(bytes);
         collectionCount         = collectionCount + 1;
         long faceId             = faceMeDataManager.addFace(collectionCount, faceFeature);
@@ -97,6 +106,9 @@ public class FaceMe {
     }
 
     public long recognizingPeople(byte[] bytes) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         // Get confidence threshold from precision level
         int precisionLevel        = PrecisionLevel.LEVEL_1E6;
         float confidenceThreshold = faceMeDataManager.getPrecisionThreshold(precisionLevel);
@@ -116,6 +128,9 @@ public class FaceMe {
     }
 
     private FaceFeature buildFaceFeature(byte[] bytes) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         FaceFeature faceFeature = new FaceFeature();
         FeatureData fData       = new FeatureData();
         fData.data              = bytesToFloats(bytes);
@@ -134,14 +149,20 @@ public class FaceMe {
     }
 
     public boolean changeCollectionName(long collectionId, String name) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         if (collectionId == null || collectionId < 0 || name == null || name == "") {
             throw new IllegalStateException("CollectionId or name can't be null");
         }
-        faceMeDataManager   = new FaceMeDataManager();
+        faceMeDataManager = new FaceMeDataManager();
         return faceMeDataManager.setFaceCollectionName(collectionId, name);
     }
 
     public String getCollectionName(long collectionId) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         if (collectionId == null || collectionId < 0) {
             throw new IllegalStateException("CollectionId can't be null");
         } 
@@ -156,11 +177,32 @@ public class FaceMe {
     }
 
     public boolean deleteFace(long faceId) {
+        // License verification to prevent local license expiration
+        checkLicense();
+
         if (faceId == null || faceId < 0) {
             throw new IllegalStateException("FaceId can't be null");
         }
         faceMeDataManager   = new FaceMeDataManager();
         return faceMeDataManager.deleteFace(faceId);
+    }
+
+    private void checkLicense() {
+        try {
+            licenseManager = new LicenseManager();
+            int result     = licenseManager.initializeEx();
+            if (result < 0) { 
+                throw new IllegalStateException("Initialize license manager failed: " + result);
+            }
+            result = licenseManager.registerLicense();
+            if (result < 0) {
+                throw new IllegalStateException("Register license failed: " + result);
+            }
+        } finally {
+            if (licenseManager != null) {
+                licenseManager.release();
+            }
+        }
     }
     
 }
