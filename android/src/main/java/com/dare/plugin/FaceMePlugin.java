@@ -19,38 +19,46 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void echo(PluginCall call) {
-        String value = call.getString("value");
+        String   value = call.getString("value");
+        JSObject ret   = new JSObject();
 
-        JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
+        ret.put("value",
+                implementation.echo(value));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void initialize(PluginCall call) {
-        String licenseKey = call.getString("value");
-        JSObject ret      = new JSObject();
-        ret.put("value", implementation.initialize(this.getContext(), licenseKey));
+        JSObject ret     = new JSObject();
+        String   license = call.getString("license");
+
+        ret.put("version",
+                implementation.initialize(this.getContext(),
+                                          license));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void enrollingFace(PluginCall call) {
-        String collectionName = call.getString("collectionName");
-        String imageBase64    = call.getString("imageBase64");
-        byte[] decodedString  = Base64.decode(imageBase64, Base64.DEFAULT);
-        JSObject ret          = new JSObject();
-        ret.put("faceId", implementation.enrollingFace(decodedString));
+        JSObject ret           = new JSObject();
+        String   name          = call.getString("name");
+        String   imageBase64   = call.getString("imageBase64");
+        byte[]   decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+
+        ret.put("collectionId",
+                implementation.enroll(name,
+                                      decodedString));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void searchFace(PluginCall call) {
+        JSObject ret         = new JSObject();
         String imageBase64   = call.getString("imageBase64");
         byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-        JSObject ret         = new JSObject();
-        ret.put("faceId", implementation.recognizingPeople(decodedString));
+
+        ret.put("collectionId",
+                implementation.recognize(decodedString));
         call.resolve(ret);
     }
-    
 }
