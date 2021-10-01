@@ -19,16 +19,6 @@ public class FaceMePlugin extends Plugin {
     private FaceMe implementation = new FaceMe();
 
     @PluginMethod
-    public void echo(PluginCall call) {
-        JSObject ret   = new JSObject();
-        String   value = call.getString("value");
-
-        ret.put("value",
-                implementation.echo(value));
-        call.resolve(ret);
-    }
-
-    @PluginMethod
     public void initialize(PluginCall call) {
         System.out.println("FaceMe initialize");
 

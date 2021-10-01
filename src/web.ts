@@ -4,11 +4,6 @@ import type { FaceMePlugin } from './definitions';
 
 export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
 
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log(options.value);
-    throw new Error('Method not implemented.');
-  }
-
   async initialize(options: { license: string }): Promise<{ version: string }> {
     console.log(options.license);
     throw new Error('Method not implemented.');
@@ -16,7 +11,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
 
   async enroll(options: { imageBase64: string,
                           name: string,
-                          data?: string }): Promise<{ collectionId: string }> {
+                          data?: string }): Promise<{ collectionId: number }> {
 
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
@@ -31,7 +26,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   }
 
   async setCollectionName(options: {collectionId: number,
-                                    name: string }): Promise<{ value: string }> {
+                                    name: string }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     console.log(options.name);
     throw new Error('Method not implemented.');
@@ -43,7 +38,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   }
 
   async setCollectionData(options: {collectionId: number,
-                                    data: string }): Promise<{ value: string }> {
+                                    data: string }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     console.log(options.data);
     throw new Error('Method not implemented.');
@@ -54,7 +49,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
-  async deleteCollection(options: { collectionId: number }): Promise<{ value: string }> {
+  async deleteCollection(options: { collectionId: number }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     throw new Error('Method not implemented.');
   }

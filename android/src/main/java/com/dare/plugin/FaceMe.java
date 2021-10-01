@@ -45,13 +45,11 @@ public class FaceMe {
     private FaceMeDataManager dataManager = null;
 
     /**
-    * It is necessary for your applications to initialize  
-    * FaceMe SDK with an license key and application context.
-    * The other FaceMe components will use the context and 
-    * license key for initialization.
+    * Initializes FaceMe SDK with application context  
+    * and license key provided by CyberLink.
     *
     * @param context  The application context.
-    * @param license  The license key.
+    * @param license  A license key provided by CyberLink.
     * @return         The String value with SDK version or
     *                 an error if the SDK could not be initialized.
     */
@@ -146,7 +144,7 @@ public class FaceMe {
                 object.put("confidence", faceResult.confidence);
                 object.put("name", dataManager.getFaceCollectionName(faceResult.collectionId));
 
-                if(data != null){
+                if (data != null) {
                     object.put("data", new String(data));
                 }
             }
@@ -262,11 +260,13 @@ public class FaceMe {
         return dataManager.deleteFaceCollection(collectionId);
     }
 
-    public String echo(String value) {
-        return "Echoing " + value;
-    }
-
-    private Bitmap bitmap(String encoded){
+    /**
+    * Get a Bitmap from an encoded.
+    *
+    * @param encoded  Expected encoded type.
+    * @return         Returns a Bitmap from an encoded type.                     
+    */
+    private Bitmap bitmap(String encoded) {
         BitmapFactory.Options options = new BitmapFactory.Options();
 
 //        options.inJustDecodeBounds = true;
@@ -281,6 +281,13 @@ public class FaceMe {
         return bitmap;
     }
 
+    /**
+    * Extract the feature data of a face template.
+    *
+    * @param encoded                 Expected encoded type.
+    * @return                        Returns the feature data of a face template.
+    * @throws IllegalStateException  If there is more than one face in the image.                   
+    */
     private FaceFeature extractFaceFeature(String encoded) {
 
         FaceFeature   feature = null;
@@ -302,7 +309,7 @@ public class FaceMe {
         if (facesCount > 0) {
             System.out.println("Found " + facesCount + " face(s)");
 
-            if(facesCount > 1){
+            if (facesCount > 1) {
                 throw new IllegalStateException("Too many faces in image (" + facesCount + ")");
             }
 //            FaceInfo info = recognizer.getFaceInfo(0, 0);
@@ -314,12 +321,26 @@ public class FaceMe {
         return feature;
     }
 
+    /**
+    * Initializes FaceMe SDK with application context and license key
+    * provided by CyberLink.
+    *
+    * @param context  The application context.
+    * @param license  A license key provided by CyberLink.                   
+    */
     private void initSdk(Context context,
-                         String license){
+                         String license) {
         FaceMeSdk.initialize(context.getApplicationContext(),
                              license);
     }
 
+    /**
+    * Initializes FaceMe Data Manager.
+    *
+    * @param recognizer              The CyberLink FaceMe Recognizer.
+    * @return                        Returns the CyberLink FaceMe Data Manager.
+    * @throws IllegalStateException  If failed initializing FaceMe Data Manager.                 
+    */
     private FaceMeDataManager initDataManager(FaceMeRecognizer recognizer) {
 
         FaceMeDataManager manager = new FaceMeDataManager();
@@ -332,6 +353,12 @@ public class FaceMe {
         return manager;
     }
 
+    /**
+    * Initializes CyberLink FaceMe Recognizer.
+    *
+    * @return                        Returns the CyberLink FaceMe Recognizer.
+    * @throws IllegalStateException  If failed initializing FaceMe Recognizer.                 
+    */
     private FaceMeRecognizer initRecognizer() {
 
         FaceMeRecognizer recognizer = new FaceMeRecognizer();
@@ -371,13 +398,13 @@ public class FaceMe {
 
             int result = licenseManager.initializeEx();
 
-            if(result < 0){
+            if (result < 0) {
                 throw new IllegalStateException("Failed initializing FaceMe license manager: " + resultLabel(result));
             }
 
             result = licenseManager.registerLicense();
 
-            if(result < 0){
+            if (result < 0) {
                 throw new IllegalStateException("Failed registering FaceMe license: " + resultLabel(result));
             }
 
@@ -391,10 +418,15 @@ public class FaceMe {
         }
     }
 
+    /** 
+    * Build feature information of a face template.
+    *
+    * @param bytes  Byte array with face information.
+    * @return       Returns the feature data of a face template.                  
+    */
     private FaceFeature buildFaceFeature(byte[] bytes) {
 
         verifyLicense();
-
 
         FaceFeature faceFeature = new FaceFeature();
         FeatureData fData       = new FeatureData();
@@ -406,29 +438,21 @@ public class FaceMe {
         return faceFeature;
     }
 
-    // Just in case the other doesn't work
-    /*private float[] bytesToFloats(byte[] bytes) {
-
-        if (bytes.length % Float.BYTES != 0){
-            throw new RuntimeException("Illegal length");
-        }
-
-        float floats[] = new float[bytes.length / Float.BYTES];
-
-        ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
-
-        return floats;
-    }*/
-
-    private String resultLabel(int result){
+    /** 
+    * Gets the description of the different results that an API call can generate.
+    *
+    * @param result  The result expected.
+    * @return        Returns the description of the result.                  
+    */
+    private String resultLabel(int result) {
         String label;
 
-        if(result == 0){
+        if (result == 0) {
             label = "Success";
         } else {
             label = errors.get(result);
 
-            if(label != null){
+            if (label != null) {
                 label = "Error";
             }
 
@@ -440,6 +464,11 @@ public class FaceMe {
 
     private static final Map<Integer, String> errors = errorMap();
 
+    /** 
+    * Generate a description for each result.
+    *
+    * @return  Returns the collection of results.                  
+    */
     private static Map<Integer, String> errorMap() {
         Map<Integer, String> map = new HashMap<>();
 
