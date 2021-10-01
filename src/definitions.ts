@@ -24,4 +24,5 @@ export interface FaceMePlugin {
   getCollectionData(options: { collectionId: number }): Promise<{ data: string }>;
 
   deleteCollection(options: { collectionId: number }): Promise<{ value: string }>;
+
 }

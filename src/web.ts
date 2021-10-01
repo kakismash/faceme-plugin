@@ -17,6 +17,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   async enroll(options: { imageBase64: string,
                           name: string,
                           data?: string }): Promise<{ collectionId: string }> {
+
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
   }

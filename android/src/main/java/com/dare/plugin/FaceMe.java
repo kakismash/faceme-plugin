@@ -248,7 +248,8 @@ public class FaceMe {
                              license);
     }
 
-    private FaceMeDataManager initDataManager(FaceMeRecognizer recognizer){
+    private FaceMeDataManager initDataManager(FaceMeRecognizer recognizer) {
+
         FaceMeDataManager manager = new FaceMeDataManager();
         int               result  = manager.initializeEx(recognizer.getFeatureScheme());
 
@@ -293,7 +294,6 @@ public class FaceMe {
     private int verifyLicense() {
         // License verification to prevent local license expiration
         LicenseManager licenseManager = null;
-
         try {
             licenseManager = new LicenseManager();
 
@@ -323,6 +323,7 @@ public class FaceMe {
 
         verifyLicense();
 
+
         FaceFeature faceFeature = new FaceFeature();
         FeatureData fData       = new FeatureData();
 
@@ -334,7 +335,7 @@ public class FaceMe {
     }
 
     // Just in case the other doesn't work
-    private float[] bytesToFloats(byte[] bytes) {
+    /*private float[] bytesToFloats(byte[] bytes) {
 
         if (bytes.length % Float.BYTES != 0){
             throw new RuntimeException("Illegal length");
@@ -345,7 +346,7 @@ public class FaceMe {
         ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
 
         return floats;
-    }
+    }*/
 
     private String resultLabel(int result){
         String label;
