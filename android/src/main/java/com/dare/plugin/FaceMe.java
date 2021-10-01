@@ -158,8 +158,7 @@ public class FaceMe {
     *
     * @param collectionId            A unique identifier that represents a specified face collection.
     * @param name                    A UTF-8 encoded string name of the collection.
-    * @return                        True when set face collection was named successfully. 
-    *                                Returns false otherwise.
+    * @return                        True when set face collection was named successfully.
     * @throws IllegalStateException  If failed setting collection name.
     */
     public boolean setCollectionName(Long collectionId, 
