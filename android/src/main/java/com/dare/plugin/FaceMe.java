@@ -44,6 +44,17 @@ public class FaceMe {
     private FaceMeRecognizer  recognizer  = null;
     private FaceMeDataManager dataManager = null;
 
+    /**
+    * It is necessary for your applications to initialize  
+    * FaceMe SDK with an license key and application context.
+    * The other FaceMe components will use the context and 
+    * license key for initialization.
+    *
+    * @param context  The application context.
+    * @param license  The license key.
+    * @return         The String value with SDK version or
+    *                 an error if the SDK could not be initialized.
+    */
     public String initialize(Context context,
                              String license) {
         try {
@@ -57,7 +68,17 @@ public class FaceMe {
             return "Error: " + e;
         }
     }
-
+    
+    /**
+    * For each person, all of his/her faces are treated  
+    * as a collection in the database, which contains
+    * at least one detected face. 
+    *
+    * @param name     A UTF-8 encoded string name of face collection.  
+    * @param encoded  Expected encoded type.
+    * @param data     Expected data to encode.
+    * @return         The number of the collection where the face was added.
+    */
     public long enroll(String name,
                        String encoded,
                        String data) {
@@ -90,6 +111,16 @@ public class FaceMe {
         return collectionId;
     }
 
+    /**
+    * Recognizes a face detected in an image or camera frame  
+    * that could match someone from the existing database.
+    *
+    * @param encoded  Expected encoded type.
+    * @return         a JSObject with CollectionId where the face is found,
+    *                 the confidence score threshold that leads to the 
+    *                 conclusion of the comparison results and
+    *                 the name of the face stored in the collection.
+    */
     public JSObject recognize(String encoded) {
 
         verifyLicense();
@@ -97,7 +128,7 @@ public class FaceMe {
         JSObject    object = new JSObject();
         FaceFeature face   = extractFaceFeature(encoded);
 
-        if(face != null){
+        if(face != null) {
             long                    collectionId = -1;
             float                   confidence   = (float).5; //dataManager.getPrecisionThreshold(PrecisionLevel.LEVEL_1E2);
             List<SimilarFaceResult> result       = dataManager.searchSimilarFace(confidence,
@@ -124,7 +155,17 @@ public class FaceMe {
         return object;
     }
 
-    public boolean setCollectionName(Long collectionId, String name) {
+    /**
+    * Set the name of the face collection.
+    *
+    * @param collectionId            A unique identifier that represents a specified face collection.
+    * @param name                    A UTF-8 encoded string name of the collection.
+    * @return                        True when set face collection was named successfully. 
+    *                                Returns false otherwise.
+    * @throws IllegalStateException  If failed setting collection name.
+    */
+    public boolean setCollectionName(Long collectionId, 
+                                     String name) {
 
         verifyLicense();
 
@@ -135,9 +176,17 @@ public class FaceMe {
             throw new IllegalStateException("Failed setting collection name, id or name not specified");
         }
 
-        return dataManager.setFaceCollectionName(collectionId, name);
+        return dataManager.setFaceCollectionName(collectionId, 
+                                                 name);
     }
 
+    /**
+    * Get collection name from the face collection.
+    *
+    * @param collectionId            A unique identifier that represents a specified face collection.
+    * @return                        Returns a UTF-8 encoded string name object. 
+    * @throws IllegalStateException  If failed getting collection name.                      
+    */
     public String getCollectionName(Long collectionId) {
 
         verifyLicense();
@@ -150,7 +199,16 @@ public class FaceMe {
         return dataManager.getFaceCollectionName(collectionId);
     }
 
-    public boolean setCollectionData(Long collectionId, String data) {
+    /**
+    * Set custom data block to the face collection.
+    *
+    * @param collectionId            A unique identifier that represents a specified face collection.
+    * @param data                    The data block of user data.
+    * @return                        Returns true when set face collection custom data was successful. 
+    * @throws IllegalStateException  If failed setting collection data.                      
+    */
+    public boolean setCollectionData(Long collectionId, 
+                                     String data) {
 
         verifyLicense();
 
@@ -164,6 +222,13 @@ public class FaceMe {
         return dataManager.setFaceCollectionCustomData(collectionId, data.getBytes());
     }
 
+    /**
+    * Get user data block from the face collection.
+    *
+    * @param collectionId            A unique identifier that represents a specified face collection.
+    * @return                        Returns a String of custom data. 
+    * @throws IllegalStateException  If failed getting collection data.                      
+    */
     public String getCollectionData(Long collectionId) {
 
         verifyLicense();
@@ -178,6 +243,13 @@ public class FaceMe {
         return data==null?"":new String(data);
     }
 
+    /**
+    * Delete a specified face collection.
+    *
+    * @param collectionId            A unique identifier that represents a specified face collection.
+    * @return                        Returns true when face collection deletion was successful.
+    * @throws IllegalStateException  If failed deleting collection.                      
+    */
     public boolean deleteCollection(Long collectionId) {
 
         verifyLicense();
