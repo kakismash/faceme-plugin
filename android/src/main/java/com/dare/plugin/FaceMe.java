@@ -390,6 +390,11 @@ public class FaceMe {
         return recognizer;
     }
 
+    // TODO 
+    /* I think this method should be void, I don't think it is necessary 
+    for it to return any value, since the result it returns 
+    I only use to know the error that I am going to throw in the exception
+    */
     private int verifyLicense() {
         // License verification to prevent local license expiration
         LicenseManager licenseManager = null;
