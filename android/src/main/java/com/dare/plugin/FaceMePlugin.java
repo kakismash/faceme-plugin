@@ -20,16 +20,18 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void echo(PluginCall call) {
-        String   value = call.getString("value");
         JSObject ret   = new JSObject();
+        String   value = call.getString("value");
 
         ret.put("value",
-        implementation.echo(value));
+                implementation.echo(value));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void initialize(PluginCall call) {
+        System.out.println("FaceMe initialize");
+
         JSObject ret     = new JSObject();
         String   license = call.getString("license");
 
@@ -41,50 +43,83 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void enroll(PluginCall call) {
-        JSObject ret           = new JSObject();
-        String   name          = call.getString("name");
-        String   imageBase64   = call.getString("imageBase64");
-        byte[]   decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+        System.out.println("FaceMe enroll");
+        JSObject ret     = new JSObject();
+        String   name    = call.getString("name");
+        String   data    = call.getString("data");
+        String   image   = call.getString("imageBase64");
 
         ret.put("collectionId",
                 implementation.enroll(name,
-                                      decodedString));
+                                      image,
+                                      data));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void search(PluginCall call) {
-        JSObject ret         = new JSObject();
-        String imageBase64   = call.getString("imageBase64");
-        byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+        System.out.println("FaceMe search");
+        JSObject ret;
+        String   image = call.getString("imageBase64");
 
-        ret.put("collectionId",
-                implementation.recognize(decodedString));
+        if(image != null) {
+            ret = implementation.recognize(image);
+        } else {
+            ret = new JSObject();
+        }
+
         call.resolve(ret);
     }
 
     @PluginMethod
-    public void changeCollectionName(PluginCall call) {
-        long collectionId = Long.parseLong(call.getString("collectionId"));
-        String name        = call.getString("name");
-        JSObject ret      = new JSObject();
-        ret.put("value", implementation.changeCollectionName(collectionId, name));
+    public void setCollectionName(PluginCall call) {
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+        String   name         = call.getString("name");
+
+        ret.put("value",
+                implementation.setCollectionName(collectionId, name));
         call.resolve(ret);
     }
 
     @PluginMethod
     public void getCollectionName(PluginCall call) {
-        long collectionId = Long.parseLong(call.getString("collectionId"));
         JSObject ret      = new JSObject();
-        ret.put("name", implementation.getCollectionName(collectionId));
+        long collectionId = Long.parseLong(call.getString("collectionId"));
+
+        ret.put("name",
+                implementation.getCollectionName(collectionId));
         call.resolve(ret);
     }
     
     @PluginMethod
-    public void deleteFace(PluginCall call) {
-        long faceId       = Long.parseLong(call.getString("faceId"));
-        JSObject ret      = new JSObject();
-        ret.put("value", implementation.deleteFace(faceId));
+    public void setCollectionData(PluginCall call) {
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+        String   data         = call.getString("data");
+
+        ret.put("value",
+                implementation.setCollectionData(collectionId, data));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void getCollectionData(PluginCall call) {
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+
+        ret.put("data",
+                implementation.getCollectionData(collectionId));
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void deleteCollection(PluginCall call) {
+        JSObject ret          = new JSObject();
+        long     collectionId = Long.parseLong(call.getString("collectionId"));
+
+        ret.put("value",
+                implementation.deleteCollection(collectionId));
         call.resolve(ret);
     }
 }
