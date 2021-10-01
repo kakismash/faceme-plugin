@@ -9,7 +9,9 @@ public class FaceData {
 
     FaceData() {}
 
-    public FaceData(long collectionId, long faceId, String name) {
+    public FaceData(long collectionId,
+                    long faceId,
+                    String name) {
         this.collectionId = collectionId;
         this.faceId       = faceId;
         this.name         = name;
