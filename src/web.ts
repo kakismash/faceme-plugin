@@ -4,11 +4,26 @@ import type { FaceMePlugin } from './definitions';
 
 export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
 
+  /**
+  * Initializes FaceMe SDK with application context  
+  * and license key provided by CyberLink.
+  * @param license  A license key provided by CyberLink.
+  * @returns        The String value with SDK version
+  */
   async initialize(options: { license: string }): Promise<{ version: string }> {
     console.log(options.license);
     throw new Error('Method not implemented.');
   }
 
+  /**
+    * For each person, all of his/her faces are treated  
+    * as a collection in the database, which contains
+    * at least one detected face. 
+    * @param name     A UTF-8 encoded string name of face collection.  
+    * @param encoded  Expected encoded type.
+    * @param data     Expected data to encode.
+    * @returns        The number of the collection where the face was added.
+    */
   async enroll(options: { imageBase64: string,
                           name: string,
                           data?: string }): Promise<{ collectionId: number }> {
