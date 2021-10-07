@@ -130,7 +130,10 @@ public class FaceMe {
 
         if(face != null) {
             long                    collectionId = -1;
-            float                   confidence   = (float).5; //dataManager.getPrecisionThreshold(PrecisionLevel.LEVEL_1E2);
+            float                   confidence   = (float).5; //dataManager.getPrecisionThreshold(PrecisionLevel.LEVEL_1E4);
+
+//ie4 1 in 10,000
+  //              ie6 1 in 1 million
             List<SimilarFaceResult> result       = dataManager.searchSimilarFace(confidence,
                                                                                 -1,
                                                                                 face,
