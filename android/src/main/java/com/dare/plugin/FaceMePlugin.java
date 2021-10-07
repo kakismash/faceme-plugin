@@ -19,16 +19,6 @@ public class FaceMePlugin extends Plugin {
     private FaceMe implementation = new FaceMe();
 
     @PluginMethod
-    public void echo(PluginCall call) {
-        JSObject ret   = new JSObject();
-        String   value = call.getString("value");
-
-        ret.put("value",
-                implementation.echo(value));
-        call.resolve(ret);
-    }
-
-    @PluginMethod
     public void initialize(PluginCall call) {
         System.out.println("FaceMe initialize");
 
@@ -44,6 +34,7 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void enroll(PluginCall call) {
         System.out.println("FaceMe enroll");
+
         JSObject ret     = new JSObject();
         String   name    = call.getString("name");
         String   data    = call.getString("data");
@@ -59,6 +50,7 @@ public class FaceMePlugin extends Plugin {
     @PluginMethod
     public void search(PluginCall call) {
         System.out.println("FaceMe search");
+
         JSObject ret;
         String   image = call.getString("imageBase64");
 
@@ -73,6 +65,8 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void setCollectionName(PluginCall call) {
+        System.out.println("FaceMe set collection name");
+
         JSObject ret          = new JSObject();
         long     collectionId = Long.parseLong(call.getString("collectionId"));
         String   name         = call.getString("name");
@@ -84,6 +78,8 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void getCollectionName(PluginCall call) {
+        System.out.println("FaceMe get collection name");
+
         JSObject ret      = new JSObject();
         long collectionId = Long.parseLong(call.getString("collectionId"));
 
@@ -94,6 +90,8 @@ public class FaceMePlugin extends Plugin {
     
     @PluginMethod
     public void setCollectionData(PluginCall call) {
+        System.out.println("FaceMe set collection data");
+
         JSObject ret          = new JSObject();
         long     collectionId = Long.parseLong(call.getString("collectionId"));
         String   data         = call.getString("data");
@@ -105,6 +103,8 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void getCollectionData(PluginCall call) {
+        System.out.println("FaceMe get collection data");
+
         JSObject ret          = new JSObject();
         long     collectionId = Long.parseLong(call.getString("collectionId"));
 
@@ -115,6 +115,8 @@ public class FaceMePlugin extends Plugin {
 
     @PluginMethod
     public void deleteCollection(PluginCall call) {
+        System.out.println("FaceMe delete collection");
+
         JSObject ret          = new JSObject();
         long     collectionId = Long.parseLong(call.getString("collectionId"));
 
