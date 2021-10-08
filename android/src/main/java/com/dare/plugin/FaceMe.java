@@ -392,12 +392,13 @@ public class FaceMe {
         return recognizer;
     }
 
-    // TODO 
-    /* I think this method should be void, I don't think it is necessary 
-    for it to return any value, since the result it returns 
-    I only use to know the error that I am going to throw in the exception
+    /**
+    * License verification to the CyberLink server.
+    *
+    * @throws IllegalStateException  If failed initializing initializing FaceMe license manager 
+    *                                or failed registering FaceMe license.             
     */
-    private int verifyLicense() {
+    private void verifyLicense() {
         // License verification to prevent local license expiration
         LicenseManager licenseManager = null;
         try {
@@ -417,7 +418,6 @@ public class FaceMe {
 
             System.out.println("Verified license: " + resultLabel(result));
 
-            return result;
         } finally {
             if (licenseManager != null) {
                 licenseManager.release();
