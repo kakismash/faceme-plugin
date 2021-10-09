@@ -105,4 +105,8 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     console.log(options.collectionId);
     throw new Error('Method not implemented.');
   }
+
+  async initCamera(): Promise<{ value: string }> {
+    throw new Error('Method not implemented.');
+  }
 }
