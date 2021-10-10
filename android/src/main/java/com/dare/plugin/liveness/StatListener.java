@@ -7,7 +7,7 @@
  */
 package com.dare.plugin.liveness;
 
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 
 import java.util.Arrays;
 
