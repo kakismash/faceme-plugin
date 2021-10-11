@@ -9,7 +9,7 @@ package com.dare.plugin.liveness;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.util.Log;
 import android.widget.Toast;
 

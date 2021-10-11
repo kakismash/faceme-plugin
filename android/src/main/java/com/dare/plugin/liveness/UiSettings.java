@@ -10,7 +10,7 @@ package com.dare.plugin.liveness;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Size;
 
 import com.cyberlink.faceme.AsyncEnginePreference;

@@ -13,7 +13,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 import android.view.TextureView;
 
@@ -144,7 +144,7 @@ class CameraV17 extends BaseCameraController {
         return cameraInfo;
     }
 
-    @Override
+    
     public int getCameraOrientation() {
         Integer cameraOrientation = uiSettings.getCameraOrientation();
         if (cameraOrientation != null)
@@ -153,7 +153,7 @@ class CameraV17 extends BaseCameraController {
         return cameraInfo != null ? cameraInfo.orientation : 0;
     }
 
-    @Override
+    
     public List<Camera.Size> getResolutions() {
         try {
             return camera == null ? null : camera.getParameters().getSupportedPreviewSizes();
@@ -279,7 +279,7 @@ class CameraV17 extends BaseCameraController {
         }
     }
 
-    @Override
+    
     void stopCamera() {
         Log.d(TAG, "stopCamera");
 
@@ -302,7 +302,7 @@ class CameraV17 extends BaseCameraController {
         }
     }
 
-    @Override
+    
     public void release() {
         super.release();
 
@@ -310,13 +310,13 @@ class CameraV17 extends BaseCameraController {
         frameHandler.release();
     }
 
-    @Override
+    
     public void setLimitFps(float fps) {
         super.setLimitFps(fps);
         frameHandler.frameRateLimit.setFPS(fps);
     }
 
-    @Override
+    
     public void setCameraId(int cameraId) {
         int num = Camera.getNumberOfCameras();
         if (num == 0) throw new IllegalStateException("Hardware camera is unavailable");

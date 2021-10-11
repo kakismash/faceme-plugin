@@ -10,7 +10,7 @@ package com.dare.plugin.liveness;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * For CyberLink used only to customize different configurations for different hardware devices.

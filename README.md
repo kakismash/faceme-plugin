@@ -13,7 +13,6 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`initialize(...)`](#initialize)
 * [`enroll(...)`](#enroll)
 * [`search(...)`](#search)
@@ -22,26 +21,12 @@ npx cap sync
 * [`setCollectionData(...)`](#setcollectiondata)
 * [`getCollectionData(...)`](#getcollectiondata)
 * [`deleteCollection(...)`](#deletecollection)
+* [`initCamera()`](#initcamera)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => any
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>any</code>
-
---------------------
-
 
 ### initialize(...)
 
@@ -157,6 +142,17 @@ deleteCollection(options: { collectionId: number; }) => any
 | Param         | Type                                   |
 | ------------- | -------------------------------------- |
 | **`options`** | <code>{ collectionId: number; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### initCamera()
+
+```typescript
+initCamera() => any
+```
 
 **Returns:** <code>any</code>
 

@@ -8,9 +8,9 @@
 package com.dare.plugin.liveness;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.multidex.MultiDexApplication;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 
 import java.util.Date;

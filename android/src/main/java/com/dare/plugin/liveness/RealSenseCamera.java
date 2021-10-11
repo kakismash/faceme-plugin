@@ -86,7 +86,7 @@ class RealSenseCamera extends BaseCameraController {
         this.createBitmapHandler = new Handler(bitmapCreationThread.getLooper());
 
         mStreaming = new Runnable() {
-            @Override
+            
             public void run() {
                 if (!mIsStreaming)
                     return;
@@ -114,7 +114,7 @@ class RealSenseCamera extends BaseCameraController {
         };
     }
 
-    @Override
+    
     public int getCameraOrientation() {
         return 0;
     }
@@ -162,12 +162,12 @@ class RealSenseCamera extends BaseCameraController {
         }
 
         mRsContext.setDevicesChangedCallback(new DeviceListener() {
-            @Override
+           
             public void onDeviceAttach() {
                 Log.d(TAG, "onDeviceAttach");
                 restart();
             }
-            @Override
+            
             public void onDeviceDetach() {
                 Log.d(TAG, "onDeviceDetach");
                 stopCamera();
@@ -201,7 +201,7 @@ class RealSenseCamera extends BaseCameraController {
         mStreamingHandler.post(mStreaming);
     }
 
-    @Override
+    
     void stopCamera() {
         if (!mIsStreaming)
             return;
@@ -289,48 +289,48 @@ class RealSenseCamera extends BaseCameraController {
         return colorBitmap;
     }
 
-    @Override
+    
     public int getUiLogicalCameraNum() {
         return mRsContext.queryDevices().getDeviceCount();
     }
 
-    @Override
+    
     public void restart() {
         stopCamera();
         startCamera();
     }
 
-    @Override
+    
     public void pause() {
         stopCamera();
     }
 
-    @Override
+    
     public void resume() {
         startCamera();
     }
 
-    @Override
+    
     public void release() {
         super.release();
     }
 
-    @Override
+    
     public boolean switchCamera() {
         return false;
     }
 
-    @Override
+    
     public <S> List<S> getResolutions() {
         return null;
     }
 
-    @Override
+    
     public Size getCurrentResolution() {
         return new Size(previewWidth, previewHeight);
     }
 
-    @Override
+    
     public void setLaserPower(float newValue) {
         if (newValue > 360F || newValue < 0F || newValue == mLaserPower || !mIsStreaming) {
             return;

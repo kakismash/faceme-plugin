@@ -94,7 +94,7 @@ public class CLGLRenderer implements GLSurfaceView.Renderer, AutoCloseable{
         try(FrameSet processed = applyFilters(frameSet, filters)){
             choosePointsTexture(processed);
             processed.foreach(new FrameCallback() {
-                @Override
+                
                 public void onFrame(Frame f) {
                     addFrame(f);
                     upload(f);

@@ -15,7 +15,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
-import android.support.annotation.CallSuper;
+import androidx.annotation.CallSuper;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -80,7 +80,7 @@ abstract class BaseCameraController implements CameraController {
 
     private TextureView.SurfaceTextureListener newTextureCallback() {
         return new TextureView.SurfaceTextureListener() {
-            @Override
+            
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                 Log.i(TAG, "onSurfaceTextureAvailable: " + width + "x" + height);
                 isTextureAvailable.set(true);
@@ -268,7 +268,6 @@ abstract class BaseCameraController implements CameraController {
     }
 
     @CallSuper
-    @Override
     public void setCameraCallback(Callback callback) {
         if (callback != null)
             this.cameraCallback = callback;
@@ -276,7 +275,7 @@ abstract class BaseCameraController implements CameraController {
             this.cameraCallback = new Callback() {};
     }
 
-    @Override
+ 
     public Size getCurrentResolution() {
         if (viewWidth >= viewHeight) { // Landscape view.
             return new Size(previewWidth, previewHeight);
@@ -285,7 +284,7 @@ abstract class BaseCameraController implements CameraController {
         }
     }
 
-    @Override
+   
     public void setResolution(int preferWidth, int preferHeight) {
         this.previewWidth = this.preferWidth = preferWidth;
         this.previewHeight = this.preferHeight = preferHeight;
@@ -304,7 +303,7 @@ abstract class BaseCameraController implements CameraController {
 
     abstract void stopCamera();
 
-    @Override
+    
     public void restart() {
         Log.d(TAG, "restart");
 
@@ -317,14 +316,14 @@ abstract class BaseCameraController implements CameraController {
         startCamera(nextCameraId);
     }
 
-    @Override
+   
     public void pause() {
         Log.d(TAG, "pause");
 
         stopCamera();
     }
 
-    @Override
+    
     public void resume() {
         Log.d(TAG, "resume");
 
@@ -332,7 +331,6 @@ abstract class BaseCameraController implements CameraController {
     }
 
     @CallSuper
-    @Override
     public void release() {
         Log.d(TAG, "release");
 
@@ -341,25 +339,24 @@ abstract class BaseCameraController implements CameraController {
         mainTextureView.setSurfaceTextureListener(null);
     }
 
-    @Override
+    
     public boolean switchCamera() {
         isCameraFacingBack = !isCameraFacingBack;
         restartCamera(true);
         return isCameraFacingBack;
     }
 
-    @Override
+    
     public void setCameraId(int cameraId) {
         Log.i(TAG, "Set camera ID to " + cameraId);
     }
 
-    @Override
+    
     public void setConcurrentBitmap(boolean enable) {
         this.concurrentBitmapEnabled = enable;
     }
 
     @CallSuper
-    @Override
     public void setLimitFps(float fps) {
         this.limitFps = fps;
     }
@@ -408,7 +405,7 @@ abstract class BaseCameraController implements CameraController {
      * Compares two {@code Size}s based on their areas.
      */
     private static class CompareSizesByArea implements Comparator<Size> {
-        @Override
+        
         public int compare(Size lhs, Size rhs) {
             // We cast here to ensure the multiplications won't overflow
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
@@ -416,10 +413,10 @@ abstract class BaseCameraController implements CameraController {
         }
     }
 
-    @Override
+    
     public void setLaserPower(float newValue) { }
 
-    @Override
+    
     public void setUiSettings(UiSettings uiSettings) {
         this.uiSettings = uiSettings;
     }
