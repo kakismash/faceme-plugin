@@ -18,6 +18,8 @@ import android.renderscript.Type;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.dare.plugin.liveness.script.ScriptC_rotator;
+
 class FrameV17 implements DepthDistanceCallback {
     private static final String TAG = "FaceMe.CameraF17";
 
