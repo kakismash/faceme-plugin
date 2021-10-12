@@ -445,6 +445,22 @@ public class FaceMe {
         return faceFeature;
     }
 
+    /**
+    * Convert byte array to float array.
+    *
+    * @param bytes              Byte array to convert.
+    * @return                   Returns the float array. 
+    * @throws RuntimeException  If illegal length.                      
+    */
+    private float[] bytesToFloats(byte[] bytes) {
+        if (bytes.length % Float.BYTES != 0){
+            throw new RuntimeException("Illegal length");
+        }
+        float floats[] = new float[bytes.length / Float.BYTES];
+        ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
+        return floats;
+    }
+
     /** 
     * Gets the description of the different results that an API call can generate.
     *

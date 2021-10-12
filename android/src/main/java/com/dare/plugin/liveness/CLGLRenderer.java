@@ -84,7 +84,7 @@ public class CLGLRenderer implements GLSurfaceView.Renderer, AutoCloseable{
     public void upload(FrameSet frameSet) {
         mHasColorRbg8 = mHasColorizedDepth = false;
         frameSet.foreach(new FrameCallback() {
-            @Override
+            
             public void onFrame(Frame f) {
                 getTexture(f);
             }

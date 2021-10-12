@@ -78,13 +78,13 @@ class InfraredCameraV17 extends BaseCameraController {
         };
     }
 
-    @Override
+    
     public void setCameraCallback(Callback callback) {
         super.setCameraCallback(callback);
         frameHandler.setCameraCallback(callback);
     }
 
-    @Override
+    
     public int getUiLogicalCameraNum() {
         Integer num = customHandler.getUiLogicalCameraNum();
         if (num != null) return num;
@@ -92,7 +92,7 @@ class InfraredCameraV17 extends BaseCameraController {
         return Camera.getNumberOfCameras();
     }
 
-    @Override
+    
     void startCamera(boolean nextCameraId) {
         super.startCamera(nextCameraId);
 
@@ -167,7 +167,7 @@ class InfraredCameraV17 extends BaseCameraController {
         return cameraInfo;
     }
 
-    @Override
+    
     public int getCameraOrientation() {
         Integer cameraOrientation = uiSettings.getCameraOrientation();
         if (cameraOrientation != null)
@@ -175,7 +175,7 @@ class InfraredCameraV17 extends BaseCameraController {
         return getCameraInfo(colorCameraId).orientation;
     }
 
-    @Override
+    
     public List<Camera.Size> getResolutions() {
         try {
             return colorCamera == null ? null : colorCamera.getParameters().getSupportedPreviewSizes();
@@ -318,7 +318,7 @@ class InfraredCameraV17 extends BaseCameraController {
         }
     }
 
-    @Override
+    
     void stopCamera() {
         Log.d(TAG, "stopCamera");
 
@@ -358,7 +358,7 @@ class InfraredCameraV17 extends BaseCameraController {
         }
     }
 
-    @Override
+    
     public void release() {
         super.release();
 
@@ -367,13 +367,13 @@ class InfraredCameraV17 extends BaseCameraController {
         frameHandler.release();
     }
 
-    @Override
+    
     public void setLimitFps(float fps) {
         super.setLimitFps(fps);
         frameHandler.frameRateLimit.setFPS(fps);
     }
 
-    @Override
+    
     public void setCameraId(int cameraId) {
         int num = Camera.getNumberOfCameras();
         if (num == 0) throw new IllegalStateException("Hardware camera is unavailable");
