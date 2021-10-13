@@ -10,7 +10,7 @@ package com.dare.plugin.liveness;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 
 import java.util.Date;
