@@ -13,14 +13,12 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import java.nio.charset.StandardCharsets;
 import java.lang.Long;
 
-import com.dare.plugin.liveness.Liveness;
+import com.dare.plugin.liveness.LivenessDetector;
 
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
 
     private FaceMe implementation = new FaceMe();
-
-    private Liveness liveness = new Liveness();
 
     @PluginMethod
     public void initialize(PluginCall call) {
@@ -133,10 +131,16 @@ public class FaceMePlugin extends Plugin {
     public void initCamera(PluginCall call) {
         System.out.println("FaceMe init camera");
 
-        JSObject ret          = new JSObject();
-
-        ret.put("value",
-                liveness.initCamera());
+        LivenessDetector liveness = new LivenessDetector();
+        JSObject         ret      = new JSObject();
+        int              cameraId = Integer.parseInt(call.getString("collectionId"));
+        if (liveness.initCamera(cameraId) == null) {
+            ret.put("value",
+                    "Error opening camera");
+        } else {
+            ret.put("value",
+                    "Camera inizilized");
+        }
         call.resolve(ret);
     }
 }

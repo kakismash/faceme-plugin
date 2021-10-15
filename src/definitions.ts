@@ -23,6 +23,6 @@ export interface FaceMePlugin {
 
   deleteCollection(options: { collectionId: number }): Promise<{ value: boolean }>;
 
-  initCamera(): Promise<{ value: string }>;
+  initCamera(options: {cameraId: number}): Promise<{ value: string }>;
 
 }

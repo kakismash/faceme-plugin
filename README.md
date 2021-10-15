@@ -21,7 +21,7 @@ npx cap sync
 * [`setCollectionData(...)`](#setcollectiondata)
 * [`getCollectionData(...)`](#getcollectiondata)
 * [`deleteCollection(...)`](#deletecollection)
-* [`initCamera()`](#initcamera)
+* [`initCamera(...)`](#initcamera)
 
 </docgen-index>
 
@@ -148,11 +148,15 @@ deleteCollection(options: { collectionId: number; }) => any
 --------------------
 
 
-### initCamera()
+### initCamera(...)
 
 ```typescript
-initCamera() => any
+initCamera(options: { cameraId: number; }) => any
 ```
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ cameraId: number; }</code> |
 
 **Returns:** <code>any</code>
 
