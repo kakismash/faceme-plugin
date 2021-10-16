@@ -26,21 +26,14 @@ public class LivenessDetector {
     
     
     /** A safe way to get an instance of the Camera object. */
-    public Camera initCamera(int cameraId) {
+    public static Camera initCamera(){
         Camera c = null;
-        //if (checkCameraHardware()) {
-            //checkPermissions();
-            try {
-                if(cameraId == -1) {
-                    c = Camera.open(); // attempt to get a Camera instance
-                } else {
-                    c = Camera.open(cameraId); // attempt to get a Camera instance
-                }
-            }
-            catch (Exception e) {
-                // Camera is not available (in use or does not exist)
-            }
-        //}
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        }
+        catch (Exception e){
+            // Camera is not available (in use or does not exist)
+        }
         return c; // returns null if camera is unavailable
     }
 

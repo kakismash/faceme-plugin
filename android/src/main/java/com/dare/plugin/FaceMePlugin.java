@@ -131,10 +131,9 @@ public class FaceMePlugin extends Plugin {
     public void initCamera(PluginCall call) {
         System.out.println("FaceMe init camera");
 
-        LivenessDetector liveness = new LivenessDetector();
-        JSObject         ret      = new JSObject();
-        int              cameraId = Integer.parseInt(call.getString("cameraId"));
-        if (liveness.initCamera(cameraId) == null) {
+        JSObject ret = new JSObject();
+        
+        if (LivenessDetector.initCamera() == null) {
             ret.put("value",
                     "Error opening camera");
         } else {
