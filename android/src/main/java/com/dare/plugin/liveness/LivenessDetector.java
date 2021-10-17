@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
 
 
-public class LivenessDetector {
+public class LivenessDetector extends AppCompatActivity {
 
     /** Check if this device has a camera */
     private boolean checkCameraHardware(Context context) {
