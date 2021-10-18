@@ -19,6 +19,7 @@ import com.dare.plugin.liveness.LivenessDetector;
 public class FaceMePlugin extends Plugin {
 
     private FaceMe implementation = new FaceMe();
+    private LivenessDetector lDetector = new LivenessDetector();
 
     @PluginMethod
     public void initialize(PluginCall call) {
@@ -133,13 +134,9 @@ public class FaceMePlugin extends Plugin {
 
         JSObject ret = new JSObject();
         
-        if (LivenessDetector.initCamera() == null) {
-            ret.put("value",
-                    "Error opening camera");
-        } else {
-            ret.put("value",
-                    "Camera inizilized");
-        }
+        ret.put("value",
+                lDetector.initCamera());
+        
         call.resolve(ret);
     }
 }
