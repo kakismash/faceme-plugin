@@ -25,7 +25,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
+//import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 public class LivenessDetector extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
-    private Button takePictureButton;
+    //private Button takePictureButton;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -66,7 +66,7 @@ public class LivenessDetector extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_android_camera_api);
@@ -81,7 +81,7 @@ public class LivenessDetector extends AppCompatActivity {
                 takePicture();
             }
         });
-    }
+    }*/
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -276,6 +276,12 @@ public class LivenessDetector extends AppCompatActivity {
         }
         Log.e(TAG, "openCamera X");
     }
+
+    public String initCamera() {
+        openCamera();
+        return "initCamera";
+    }
+    
     protected void updatePreview() {
         if(null == cameraDevice) {
             Log.e(TAG, "updatePreview error, return");

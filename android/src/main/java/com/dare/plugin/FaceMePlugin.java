@@ -128,8 +128,7 @@ public class FaceMePlugin extends Plugin {
 
         JSObject ret = new JSObject();
         
-        ret.put("value",
-                lDetector.initCamera());
+        ret.put("value", lDetector.initCamera());
         
         call.resolve(ret);
     }
