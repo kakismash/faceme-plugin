@@ -16,13 +16,13 @@ import androidx.core.app.ActivityCompat;
 
 public class LivenessDetector {
 
-    public String initCamera() {
+    /*public String initCamera() {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         if (intent == null) {
             return "Error opening camera";
         }
         return "Camera inizialized";
-    }
+    }*/
 
     //private static final int CAMERA_PERMISSIONS_REQUEST = 100;
     //private static final String TAG = "FaceMe Plugin";
