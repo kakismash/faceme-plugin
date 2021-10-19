@@ -1,19 +1,13 @@
 package com.dare.plugin;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
+import android.hardware.camera2.CameraAccessException;
 
+import com.dare.plugin.liveness.LivenessDetector;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-
-import java.nio.charset.StandardCharsets;
-import java.lang.Long;
-
-import com.dare.plugin.liveness.LivenessDetector;
 
 @CapacitorPlugin(name = "FaceMe")
 public class FaceMePlugin extends Plugin {
@@ -129,7 +123,7 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void initCamera(PluginCall call) {
+    public void initCamera(PluginCall call) throws CameraAccessException {
         System.out.println("FaceMe init camera");
 
         JSObject ret = new JSObject();
