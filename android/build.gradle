@@ -59,12 +59,14 @@ repositories {
 
 
 dependencies {
-    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs', exclude: ['*-src.jar'])
+    compileOnly files('libs/faceme-6.2.0.aar')
+    compileOnly files('libs/faceme_widgets-6.2.0.aar')
+    //implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs', exclude: ['*-src.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    //implementation 'androidx.appcompat:appcompat:1.0.2'
     //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //implementation 'androidx.recyclerview:recyclerview:1.0.0'
     //implementation 'androidx.exifinterface:exifinterface:1.0.0'
@@ -76,4 +78,12 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     //implementation 'com.github.nanchen2251:CameraView:1.0.1'
+
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    def camerax_version = "1.0.0-beta05"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation"androidx.camera:camera-view:1.0.0-alpha12"
+    implementation "androidx.camera:camera-extensions:1.0.0-alpha12"
 }
