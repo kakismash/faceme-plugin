@@ -1,19 +1,41 @@
 package com.dare.plugin;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.camera2.CameraAccessException;
+import android.net.Uri;
+import android.provider.MediaStore;
 
-import com.dare.plugin.liveness.LivenessDetector;
+import androidx.activity.result.ActivityResult;
+import androidx.core.content.FileProvider;
+
+import com.dare.plugin.liveness.CameraDetector;
+import com.dare.plugin.liveness.CameraSettings;
+import com.dare.plugin.liveness.CameraUtils;
+import com.dare.plugin.liveness.ExifWrapper;
+import com.dare.plugin.liveness.ImageUtils;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import com.getcapacitor.PermissionState;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
+import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-@CapacitorPlugin(name = "FaceMe")
+import java.io.File;
+
+@CapacitorPlugin(
+        name = "FaceMe"
+)
 public class FaceMePlugin extends Plugin {
 
     private FaceMe implementation = new FaceMe();
-    private LivenessDetector lDetector = new LivenessDetector();
+    private CameraDetector cameraDetector= new CameraDetector();
 
     @PluginMethod
     public void initialize(PluginCall call) {
@@ -123,13 +145,10 @@ public class FaceMePlugin extends Plugin {
     }
 
     @PluginMethod
-    public void initCamera(PluginCall call) throws CameraAccessException {
-        System.out.println("FaceMe init camera");
-
-        JSObject ret = new JSObject();
-        
-        ret.put("value", lDetector.initCamera());
-        
-        call.resolve(ret);
+    public void initCamera(PluginCall call) {
+        cameraDetector.showCamera(call);
+        call.resolve();
     }
+
+
 }
