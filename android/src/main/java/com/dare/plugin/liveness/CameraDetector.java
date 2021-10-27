@@ -2,6 +2,7 @@ package com.dare.plugin.liveness;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
+
 import androidx.activity.result.ActivityResult;
 import androidx.core.content.FileProvider;
 import com.getcapacitor.FileUtils;
@@ -64,66 +67,11 @@ public class CameraDetector extends Plugin {
     private boolean isFirstRequest = true;
     private boolean isSaved = false;
 
+    private static final String TAG = "FaceMe";
+
     private CameraSettings settings = new CameraSettings();
 
-    @PluginMethod
-    public void getPhoto(PluginCall call) {
-        isEdited = false;
-        settings = getSettings(call);
-        doShow(call);
-    }
-
-    private void doShow(PluginCall call) {
-        switch (settings.getSource()) {
-            case CAMERA:
-                showCamera(call);
-                break;
-            case PHOTOS:
-                showPhotos(call);
-                break;
-            default:
-                showPrompt(call);
-                break;
-        }
-    }
-
-    private void showPrompt(final PluginCall call) {
-        // We have all necessary permissions, open the camera
-        List<String> options = new ArrayList<>();
-        options.add(call.getString("promptLabelPhoto", "From Photos"));
-        options.add(call.getString("promptLabelPicture", "Take Picture"));
-
-        final CameraBottomSheetDialogFragment fragment = new CameraBottomSheetDialogFragment();
-        fragment.setTitle(call.getString("promptLabelHeader", "Photo"));
-        fragment.setOptions(
-                options,
-                index -> {
-                    if (index == 0) {
-                        settings.setSource(CameraSource.PHOTOS);
-                        openPhotos(call);
-                    } else if (index == 1) {
-                        settings.setSource(CameraSource.CAMERA);
-                        openCamera(call);
-                    }
-                },
-                () -> call.reject("User cancelled photos app")
-        );
-        fragment.show(getActivity().getSupportFragmentManager(), "capacitorModalsActionSheet");
-    }
-
-    public void showCamera(final PluginCall call) {
-        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            call.reject(NO_CAMERA_ERROR);
-            return;
-        }
-        openCamera(call);
-    }
-
-    private void showPhotos(final PluginCall call) {
-        openPhotos(call);
-    }
-
-    private boolean checkCameraPermissions(PluginCall call) {
+    /*private boolean checkCameraPermissions(PluginCall call) {
         // if the manifest does not contain the camera permissions key, we don't need to ask the user
         boolean needCameraPerms = isPermissionDeclared(CAMERA);
         boolean hasCameraPerms = !needCameraPerms || getPermissionState(CAMERA) == PermissionState.GRANTED;
@@ -147,7 +95,7 @@ public class CameraDetector extends Plugin {
             return false;
         }
         return true;
-    }
+    }*/
 
     private boolean checkPhotosPermissions(PluginCall call) {
         if (getPermissionState(PHOTOS) != PermissionState.GRANTED) {
@@ -175,7 +123,6 @@ public class CameraDetector extends Plugin {
             return;
         }
 
-        doShow(call);
     }
 
     private CameraSettings getSettings(PluginCall call) {
@@ -208,10 +155,15 @@ public class CameraDetector extends Plugin {
         }
     }
 
-    public void openCamera(final PluginCall call) {
-        if (checkCameraPermissions(call)) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+    public void openCamera(PluginCall call, Context context) {
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePictureIntent.resolveActivity(context.getPackageManager());
+        //startActivityForResult(call, takePictureIntent, "processCameraImage");
+        //startActivityForResult(intent, CAMERA_PIC_REQUEST );
+
+
+            /*if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
                 // If we will be saving the photo, send the target file along
                 try {
                     String appId = getAppId();
@@ -228,16 +180,8 @@ public class CameraDetector extends Plugin {
                 startActivityForResult(call, takePictureIntent, "processCameraImage");
             } else {
                 call.reject(NO_CAMERA_ACTIVITY_ERROR);
-            }
-        }
-    }
+            }*/
 
-    public void openPhotos(final PluginCall call) {
-        if (checkPhotosPermissions(call)) {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(call, intent, "processPickedImage");
-        }
     }
 
     @ActivityCallback
@@ -302,23 +246,6 @@ public class CameraDetector extends Plugin {
                     Logger.error(getLogTag(), UNABLE_TO_PROCESS_IMAGE, e);
                 }
             }
-        }
-    }
-
-    @ActivityCallback
-    private void processEditedImage(PluginCall call, ActivityResult result) {
-        isEdited = true;
-        settings = getSettings(call);
-        if (result.getResultCode() == Activity.RESULT_CANCELED) {
-            // User cancelled the edit operation, if this file was picked from photos,
-            // process the original picked image, otherwise process it as a camera photo
-            if (imagePickedContentUri != null) {
-                processPickedImage(imagePickedContentUri, call);
-            } else {
-                processCameraImage(call, result);
-            }
-        } else {
-            processPickedImage(call, result);
         }
     }
 
@@ -511,7 +438,6 @@ public class CameraDetector extends Plugin {
     }
 
     @Override
-    @PluginMethod
     public void requestPermissions(PluginCall call) {
         // If the camera permission is defined in the manifest, then we have to prompt the user
         // or else we will get a security exception when trying to present the camera. If, however,
