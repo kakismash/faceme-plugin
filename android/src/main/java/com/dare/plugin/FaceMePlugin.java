@@ -185,10 +185,21 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     @PluginMethod(returnType = PluginMethod.RETURN_NONE)
     public void closeCamera(PluginCall call) {
         try {
-            fragment.closeCamera();
+            bridge.getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    FrameLayout containerView = getBridge().getActivity().findViewById(containerViewId);
+                    containerView.destroyDrawingCache();
+                    containerView.removeAllViews();
+
+                    fragment.closeCamera();
+                }
+            });
+
             call.resolve();
         } catch (Exception e) {
-            call.reject("Failed to close camera");
+            call.reject("Failed to close camera at " + e.getMessage());
         }
     }
 
@@ -259,7 +270,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                     fragment.setRect(computedX, computedY, computedWidth, computedHeight);
 
                     FrameLayout containerView = getBridge().getActivity().findViewById(containerViewId);
-                    if(containerView == null){
+//                    if(containerView == null){
                         containerView = new FrameLayout(getActivity().getApplicationContext());
                         containerView.setId(containerViewId);
 
@@ -275,9 +286,9 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                         fragmentTransaction.commit();
 
                         call.success();
-                    } else {
-                        call.reject("camera already started");
-                    }
+//                    } else {
+//                        call.reject("camera already started");
+//                    }
                 }
             });
         }

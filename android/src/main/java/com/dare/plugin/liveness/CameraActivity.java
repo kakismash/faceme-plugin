@@ -145,12 +145,16 @@ public class CameraActivity extends Fragment {
     }
 
     public void closeCamera() {
-        if (mCamera != null) {
+        if (mPreview != null) {
             mCamera.stopPreview();
-            mCamera.setPreviewCallback(null);
-            mCamera.release();
-            mCamera = null;
+            mPreview.removeAllViews();
         }
+//        if (mCamera != null) {
+//            mCamera.stopPreview();
+//            mCamera.setPreviewCallback(null);
+//            mCamera.release();
+//            mCamera = null;
+//        }
     }
 
     private void setupTouchAndBackButton() {
