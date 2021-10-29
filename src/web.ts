@@ -139,9 +139,9 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
 
   /**
   * Take picture.
-  * @param width          Camera width. If you want to use the default value you can add 0.
-  * @param height         Camera height. If you want to use the default value you can add 0.
-  * @param quality        Camera quality. If you want to use the default value you can add 0.          
+  * @param width    Camera width. If you want to use the default value you can add 0.
+  * @param height   Camera height. If you want to use the default value you can add 0.
+  * @param quality  Camera quality. If you want to use the default value you can add 0.          
   */
   async takePicture(options: {  width:   number,
                                 height:  number,
