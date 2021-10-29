@@ -46,7 +46,7 @@ public class FaceMe {
 
     /**
     * Initializes FaceMe SDK with application context  
-    * and license key provided by CyberLink.
+    * and license key provided by CyberLink.deleteCollection
     *
     * @param context  The application context.
     * @param license  A license key provided by CyberLink.

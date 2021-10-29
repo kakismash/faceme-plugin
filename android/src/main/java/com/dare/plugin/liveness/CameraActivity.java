@@ -143,6 +143,16 @@ public class CameraActivity extends Fragment {
 
         }
     }
+
+    public void closeCamera() {
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
     private void setupTouchAndBackButton() {
 
         final GestureDetector gestureDetector = new GestureDetector(getActivity().getApplicationContext(), new TapGestureDetector());

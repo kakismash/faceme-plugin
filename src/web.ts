@@ -11,7 +11,6 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   * @returns        The SDK version.
   */
   async initialize(options: { license: string }): Promise<{ version: string }> {
-
     console.log(options.license);
     throw new Error('Method not implemented.');
   }
@@ -25,11 +24,12 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   * @param data         Expected data to encode.
   * @returns            The number of the collection where the face was added.
   */
-  async enroll(options: { name: string,
+  async enroll(options: { name:        string,
                           imageBase64: string,
-                          data?: string }): Promise<{ collectionId: number }> {
-
+                          data?:       string }): Promise<{ collectionId: number }> {
+    console.log(options.name);
     console.log(options.imageBase64);
+    console.log(options.data);
     throw new Error('Method not implemented.');
   }
 
@@ -43,9 +43,9 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   *                     the name of the face stored in the collection.
   */
   async search(options: { imageBase64: string }): Promise<{ collectionId?: string,
-                                                            confidence?: number,
-                                                            name?: string,
-                                                            data?: string}> {
+                                                            confidence?:   number,
+                                                            name?:         string,
+                                                            data?:         string}> {
     console.log(options.imageBase64);
     throw new Error('Method not implemented.');
   }
@@ -57,7 +57,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   * @returns             True when set face collection was named successfully.
   */
   async setCollectionName(options: {collectionId: number,
-                                    name: string }): Promise<{ value: boolean }> {
+                                    name:         string }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     console.log(options.name);
     throw new Error('Method not implemented.');
@@ -80,7 +80,7 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   * @returns             Returns true when set face collection custom data was successful.                     
   */
   async setCollectionData(options: {collectionId: number,
-                                    data: string }): Promise<{ value: boolean }> {
+                                    data:         string }): Promise<{ value: boolean }> {
     console.log(options.collectionId);
     console.log(options.data);
     throw new Error('Method not implemented.');
@@ -106,7 +106,34 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
     throw new Error('Method not implemented.');
   }
 
-  async initCamera(): Promise<void> {
+  /**
+  * Open the camera to start scanning.
+  * @param x              Position X. If you want to use the default value you can add 0.         
+  * @param y              Position Y. If you want to use the default value you can add 0.
+  * @param width          Camera width. If you want to use the default value you can add 0.
+  * @param height         Camera height. If you want to use the default value you can add 0.
+  * @param paddingBottom  Camera padding bottom. If you want to use the default value you can add 0.
+  * @param position       Camera position (front / back).            
+  */
+  async initCamera(options: { x:             number,
+                              y:             number,
+                              width:         number,
+                              height:        number,
+                              paddingBottom: number,
+                              position:      string }): Promise<void> {
+    console.log(options.x);
+    console.log(options.y);
+    console.log(options.width);
+    console.log(options.height);
+    console.log(options.paddingBottom);
+    console.log(options.position);
+    throw new Error('Method not implemented.');
+  }
+
+  /**
+  * Close camera.                   
+  */
+  async closeCamera(): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
