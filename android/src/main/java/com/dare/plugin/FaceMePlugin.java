@@ -1,6 +1,7 @@
 package com.dare.plugin;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -188,6 +189,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
 
     @PluginMethod
     public void initCamera(PluginCall call) {
+        saveCall(call);
         if (!getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             call.reject(NO_CAMERA_ERROR);
             return;
@@ -211,6 +213,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
         return settings;
     }*/
 
+    @SuppressLint("WrongConstant")
     private void openCamera(final PluginCall call) {
         /*if (checkCameraPermissions(call)) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -222,10 +225,10 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
         }*/
         String position = "front";
 
-        final Integer x = call.getInt("x", 0);
-        final Integer y = call.getInt("y", 0);
-        final Integer width = call.getInt("width", 0);
-        final Integer height = call.getInt("height", 0);
+        final Integer x = call.getInt("x", 100);
+        final Integer y = call.getInt("y", 100);
+        final Integer width = call.getInt("width", 50);
+        final Integer height = call.getInt("height", 50);
         final Integer paddingBottom = call.getInt("paddingBottom", 0);
         final Boolean toBack = call.getBoolean("toBack", false);
         final Boolean storeToFile = call.getBoolean("storeToFile", false);
