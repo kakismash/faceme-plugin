@@ -172,7 +172,6 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
             call.reject(NO_CAMERA_ERROR);
             return;
         }
-        //settings = getSettings(call);
         final Integer x = call.getInt("x");
         final Integer y = call.getInt("y");
         final Integer width = call.getInt("width");
@@ -196,15 +195,37 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                     fragment.closeCamera();
                 }
             });
-
-            call.resolve();
         } catch (Exception e) {
             call.reject("Failed to close camera at " + e.getMessage());
         }
     }
 
+    @PluginMethod(returnType = PluginMethod.RETURN_NONE)
+    public void takePicture(PluginCall call) {
+        if(!hasCamera(call)){
+            call.error("Camera is not running");
+            return;
+        }
+        saveCall(call);
+
+        final Integer width   = call.getInt("width");
+        final Integer height  = call.getInt("height");
+        final Integer quality = call.getInt("quality");
+        try {
+            fragment.takePicture(width, height, quality);
+        } catch (Exception e) {
+            call.reject("Failed to take picture at " + e.getMessage());
+        }
+    }
+
     @SuppressLint("WrongConstant")
-    private void openCamera(final PluginCall call, Integer x, Integer y, Integer width, Integer height, Integer paddingBottom, String position) {
+    private void openCamera(final PluginCall call,
+                            final Integer    x,
+                            final Integer    y,
+                            final Integer    width,
+                            final Integer    height,
+                            final Integer    paddingBottom,
+                            final String     position) {
         if (checkCameraPermissions(call)) {
 
             final Boolean toBack = call.getBoolean("toBack", false);
@@ -319,6 +340,22 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
         }
     }
 
+    private boolean hasCamera(PluginCall call) {
+        if(this.hasView(call) == false){
+            return false;
+        }
+        if(fragment.getCamera() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean hasView(PluginCall call) {
+        if(fragment == null) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     protected void handleOnResume() {

@@ -136,4 +136,19 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   async closeCamera(): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
+  /**
+  * Take picture.
+  * @param width          Camera width. If you want to use the default value you can add 0.
+  * @param height         Camera height. If you want to use the default value you can add 0.
+  * @param quality        Camera quality. If you want to use the default value you can add 0.          
+  */
+  async takePicture(options: {  width:   number,
+                                height:  number,
+                                quality: number }): Promise<void> {
+    console.log(options.width);
+    console.log(options.height);
+    console.log(options.quality);
+    throw new Error('Method not implemented.');                              
+  }
 }

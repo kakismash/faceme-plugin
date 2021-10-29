@@ -32,4 +32,8 @@ export interface FaceMePlugin {
 
   closeCamera(): Promise<void>;
 
+  takePicture(options: {  width:   number,
+                          height:  number,
+                          quality: number }): Promise<void>;
+
 }
