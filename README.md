@@ -23,6 +23,7 @@ npx cap sync
 * [`deleteCollection(...)`](#deletecollection)
 * [`initCamera(...)`](#initcamera)
 * [`closeCamera()`](#closecamera)
+* [`takePicture(...)`](#takepicture)
 
 </docgen-index>
 
@@ -169,6 +170,21 @@ initCamera(options: { x: number; y: number; width: number; height: number; paddi
 ```typescript
 closeCamera() => any
 ```
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### takePicture(...)
+
+```typescript
+takePicture(options: { width: number; height: number; quality: number; }) => any
+```
+
+| Param         | Type                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| **`options`** | <code>{ width: number; height: number; quality: number; }</code> |
 
 **Returns:** <code>any</code>
 
