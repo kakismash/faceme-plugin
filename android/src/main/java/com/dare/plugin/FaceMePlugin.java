@@ -8,7 +8,9 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.hardware.Camera;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.ViewGroup;
@@ -405,6 +407,18 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     public void onCameraStarted() {
         PluginCall pluginCall = getSavedCall();
         System.out.println("camera started");
+
+        Camera mCamera = fragment.getCamera();
+        mCamera.setPreviewCallbackWithBuffer(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] bytes, Camera camera) {
+                try {
+                    Log.d(fragment.getTag(), "camera Bytes:" + bytes.length);
+                } catch (Error e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         pluginCall.success();
     }
 
