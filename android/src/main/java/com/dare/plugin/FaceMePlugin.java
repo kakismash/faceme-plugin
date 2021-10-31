@@ -307,7 +307,6 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.add(containerView.getId(), fragment);
                         fragmentTransaction.commit();
-
                         call.success();
 //                    } else {
 //                        call.reject("camera already started");
@@ -408,17 +407,6 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
         PluginCall pluginCall = getSavedCall();
         System.out.println("camera started");
 
-        Camera mCamera = fragment.getCamera();
-        mCamera.setPreviewCallbackWithBuffer(new Camera.PreviewCallback() {
-            @Override
-            public void onPreviewFrame(byte[] bytes, Camera camera) {
-                try {
-                    Log.d(fragment.getTag(), "camera Bytes:" + bytes.length);
-                } catch (Error e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         pluginCall.success();
     }
 

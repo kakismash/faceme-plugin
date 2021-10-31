@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.media.AudioManager;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
@@ -112,6 +110,12 @@ public class CameraActivity extends Fragment {
         createCameraPreview();
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+    }
+
 
     public void setRect(int x, int y, int width, int height){
         this.x = x;
@@ -351,7 +355,7 @@ public class CameraActivity extends Fragment {
         if (numberOfCameras == 1) {
             //There is only one camera available
         }else{
-            Log.d(TAG, "numberOfCameras: " + numberOfCameras);
+            Log.d(TAG, "number of cameras: " + numberOfCameras);
 
             // OK, we have multiple cameras. Release this camera -> cameraCurrentlyLocked
             if (mCamera != null) {

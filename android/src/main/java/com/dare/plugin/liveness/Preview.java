@@ -289,8 +289,13 @@ class Preview extends RelativeLayout implements SurfaceHolder.Callback {
                 parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
                 requestLayout();
                 //mCamera.setDisplayOrientation(90);
+
+                mCamera.setFaceDetectionListener(new MyFaceDetectionListener());
+
                 mCamera.setParameters(parameters);
                 mCamera.startPreview();
+                mCamera.startFaceDetection();
+
             } catch (Exception exception) {
                 Log.e(TAG, "Exception caused by surfaceChanged()", exception);
             }
