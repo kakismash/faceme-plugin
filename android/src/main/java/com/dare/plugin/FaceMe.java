@@ -114,7 +114,7 @@ public class FaceMe {
     * that could match someone from the existing database.
     *
     * @param encoded  Expected encoded type.
-    * @return         a JSObject with CollectionId where the face is found,
+    * @return         A JSObject with CollectionId where the face is found,
     *                 the confidence score threshold that leads to the 
     *                 conclusion of the comparison results and
     *                 the name of the face stored in the collection.
@@ -127,15 +127,15 @@ public class FaceMe {
         FaceFeature face   = extractFaceFeature(encoded);
 
         if(face != null) {
-            long                    collectionId = -1;
-            float                   confidence   = (float).5; //dataManager.getPrecisionThreshold(PrecisionLevel.LEVEL_1E4);
+            long  collectionId = -1;
+            float confidence   = (float).5; //dataManager.getPrecisionThreshold(PrecisionLevel.LEVEL_1E4);
 
 //ie4 1 in 10,000
   //              ie6 1 in 1 million
-            List<SimilarFaceResult> result       = dataManager.searchSimilarFace(confidence,
-                                                                                -1,
-                                                                                face,
-                                                                                10);
+            List<SimilarFaceResult> result = dataManager.searchSimilarFace(confidence,
+                                                                  -1,
+                                                                            face,
+                                                           10);
 
             if (result != null &&
                 !result.isEmpty()) {
@@ -219,7 +219,8 @@ public class FaceMe {
             throw new IllegalStateException("Failed setting collection data, id or data not specified");
         }
 
-        return dataManager.setFaceCollectionCustomData(collectionId, data.getBytes());
+        return dataManager.setFaceCollectionCustomData(collectionId,
+                                                       data.getBytes());
     }
 
     /**
@@ -240,7 +241,7 @@ public class FaceMe {
 
         byte[] data = dataManager.getFaceCollectionCustomData(collectionId);
 
-        return data==null?"":new String(data);
+        return data == null?"":new String(data);
     }
 
     /**
@@ -366,15 +367,15 @@ public class FaceMe {
         FaceMeRecognizer recognizer = new FaceMeRecognizer();
         RecognizerConfig config     = new RecognizerConfig();
 
-        config.mode                        = RecognizerMode.IMAGE;
-        config.preference                  = EnginePreference.PREFER_NONE;
-        config.detectionModelSpeedLevel    = DetectionModelSpeedLevel.DEFAULT;
-        config.extractionModelSpeedLevel   = ExtractionModelSpeedLevel.VERY_HIGH;
-        config.maxDetectionThreads         = 2;
-        config.maxExtractionThreads        = 2;
-        config.maxFrameHeight              = 1280;
-        config.maxFrameWidth               = 720;
-        config.minFaceWidthRatio           = 0.10f;
+        config.mode                      = RecognizerMode.IMAGE;
+        config.preference                = EnginePreference.PREFER_NONE;
+        config.detectionModelSpeedLevel  = DetectionModelSpeedLevel.DEFAULT;
+        config.extractionModelSpeedLevel = ExtractionModelSpeedLevel.VERY_HIGH;
+        config.maxDetectionThreads       = 2;
+        config.maxExtractionThreads      = 2;
+        config.maxFrameHeight            = 1280;
+        config.maxFrameWidth             = 720;
+        config.minFaceWidthRatio         = 0.10f;
 
         int result = recognizer.initializeEx(config);
 

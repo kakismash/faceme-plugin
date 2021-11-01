@@ -1,5 +1,6 @@
 package com.dare.plugin.liveness;
 
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ class MyFaceDetectionListener implements Camera.FaceDetectionListener {
         if (faces.length > 0) {
             Log.d("FaceDetection", "face detected: " + faces.length + " Face 1 Location X: "
                     + faces[0].rect.centerX() + "Y: " + faces[0].rect.centerY());
+
         }
     }
 }

@@ -46,18 +46,19 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     private FaceMe implementation = new FaceMe();
 
     // Permission alias constants
-    static final String CAMERA = "camera";
+    static final String CAMERA  = "camera";
     static final String STORAGE = "storage";
 
     // Message constants
-    private static final String PERMISSION_DENIED_ERROR_CAMERA = "User denied access to camera";
+    private static final String PERMISSION_DENIED_ERROR_CAMERA  = "User denied access to camera";
     private static final String PERMISSION_DENIED_ERROR_STORAGE = "User denied access to storage";
-    private static final String NO_CAMERA_ERROR = "Device doesn't have a camera available";
+    private static final String NO_CAMERA_ERROR                 = "Device doesn't have a camera available";
 
     // keep track of previously specified orientation to support locking orientation:
     private int previousOrientationRequest = -1;
 
     private CameraActivity fragment;
+
     private int containerViewId = 20;
 
     @PluginMethod
@@ -77,10 +78,10 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     public void enroll(PluginCall call) {
         System.out.println("FaceMe enroll");
 
-        JSObject ret     = new JSObject();
-        String   name    = call.getString("name");
-        String   data    = call.getString("data");
-        String   image   = call.getString("imageBase64");
+        JSObject ret   = new JSObject();
+        String   name  = call.getString("name");
+        String   data  = call.getString("data");
+        String   image = call.getString("imageBase64");
 
         ret.put("collectionId",
                 implementation.enroll(name,
@@ -174,13 +175,19 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
             call.reject(NO_CAMERA_ERROR);
             return;
         }
-        final Integer x = call.getInt("x");
-        final Integer y = call.getInt("y");
-        final Integer width = call.getInt("width");
-        final Integer height = call.getInt("height");
+        final Integer x             = call.getInt("x");
+        final Integer y             = call.getInt("y");
+        final Integer width         = call.getInt("width");
+        final Integer height        = call.getInt("height");
         final Integer paddingBottom = call.getInt("paddingBottom");
-        String position = call.getString("position");
-        openCamera(call, x, y, width, height, paddingBottom, position);
+        final String  position      = call.getString("position");
+        openCamera(call,
+                   x,
+                   y,
+                   width,
+                   height,
+                   paddingBottom,
+                   position);
     }
 
     @PluginMethod(returnType = PluginMethod.RETURN_NONE)
@@ -230,21 +237,23 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                             final String     position) {
         if (checkCameraPermissions(call)) {
 
-            final Boolean toBack = call.getBoolean("toBack", false);
-            final Boolean storeToFile = call.getBoolean("storeToFile", false);
+            final Boolean toBack                     = call.getBoolean("toBack", false);
+            final Boolean storeToFile                = call.getBoolean("storeToFile", false);
             final Boolean disableExifHeaderStripping = call.getBoolean("disableExifHeaderStripping", true);
-            final Boolean lockOrientation = call.getBoolean("lockAndroidOrientation", false);
-            previousOrientationRequest = getBridge().getActivity().getRequestedOrientation();
+            final Boolean lockOrientation            = call.getBoolean("lockAndroidOrientation", false);
+
+            previousOrientationRequest               = getBridge().getActivity().getRequestedOrientation();
 
             fragment = new CameraActivity();
             fragment.setEventListener(this);
-            fragment.defaultCamera = position;
-            fragment.tapToTakePicture = false;
-            fragment.dragEnabled = false;
-            fragment.tapToFocus = true;
+
+            fragment.defaultCamera              = position;
+            fragment.tapToTakePicture           = false;
+            fragment.dragEnabled                = false;
+            fragment.tapToFocus                 = true;
             fragment.disableExifHeaderStripping = disableExifHeaderStripping;
-            fragment.storeToFile = storeToFile;
-            fragment.toBack = toBack;
+            fragment.storeToFile                = storeToFile;
+            fragment.toBack                     = toBack;
 
             bridge.getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -320,7 +329,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     private boolean checkCameraPermissions(PluginCall call) {
         // if the manifest does not contain the camera permissions key, we don't need to ask the user
         boolean needCameraPerms = isPermissionDeclared(CAMERA);
-        boolean hasCameraPerms = !needCameraPerms || getPermissionState(CAMERA) == PermissionState.GRANTED;
+        boolean hasCameraPerms  = !needCameraPerms || getPermissionState(CAMERA) == PermissionState.GRANTED;
         if (!hasCameraPerms) {
             requestPermissionForAlias(CAMERA, call, "cameraPermissionsCallback");
             return false;
