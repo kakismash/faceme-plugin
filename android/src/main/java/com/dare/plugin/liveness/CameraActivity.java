@@ -46,6 +46,8 @@ import java.util.UUID;
 
 public class CameraActivity extends Fragment {
 
+    public static Preview mPreview;
+
     public interface CameraPreviewListener {
         void onPictureTaken(String originalPicture);
         void onPictureTakenError(String message);
@@ -66,7 +68,6 @@ public class CameraActivity extends Fragment {
     public FrameLayout mainLayout;
     public FrameLayout frameContainerLayout;
 
-    private Preview mPreview;
     private boolean canTakePicture = true;
 
     private View view;
@@ -573,7 +574,7 @@ public class CameraActivity extends Fragment {
         Log.d(TAG, "CameraPreview optimalPictureSize " + size.width + 'x' + size.height);
         return size;
     }
-    static byte[] rotateNV21(final byte[] yuv,
+    protected static byte[] rotateNV21(final byte[] yuv,
                              final int width,
                              final int height,
                              final int rotation)
