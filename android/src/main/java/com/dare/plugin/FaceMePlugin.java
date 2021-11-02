@@ -209,6 +209,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
         }
     }
 
+    // TO REMOVE
     @PluginMethod(returnType = PluginMethod.RETURN_NONE)
     public void takePicture(PluginCall call) {
         if(!hasCamera(call)){
@@ -273,13 +274,13 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                     int computedHeight;
                     int computedPaddingBottom;
 
-                    if(paddingBottom != 0) {
+                    if (paddingBottom != 0) {
                         computedPaddingBottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, paddingBottom, metrics);
                     } else {
                         computedPaddingBottom = 0;
                     }
 
-                    if(width != 0) {
+                    if (width != 0) {
                         computedWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, metrics);
                     } else {
                         Display defaultDisplay = getBridge().getActivity().getWindowManager().getDefaultDisplay();
@@ -289,7 +290,7 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
                         computedWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size.x, metrics);
                     }
 
-                    if(height != 0) {
+                    if (height != 0) {
                         computedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, metrics) - computedPaddingBottom;
                     } else {
                         Display defaultDisplay = getBridge().getActivity().getWindowManager().getDefaultDisplay();
@@ -351,17 +352,17 @@ public class FaceMePlugin extends Plugin implements CameraActivity.CameraPreview
     }
 
     private boolean hasCamera(PluginCall call) {
-        if(this.hasView(call) == false){
+        if (this.hasView(call) == false){
             return false;
         }
-        if(fragment.getCamera() == null) {
+        if (fragment.getCamera() == null) {
             return false;
         }
         return true;
     }
 
     private boolean hasView(PluginCall call) {
-        if(fragment == null) {
+        if (fragment == null) {
             return false;
         }
         return true;

@@ -16,7 +16,7 @@ class MyFaceDetectionListener implements Camera.FaceDetectionListener {
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
         if (faces.length > 0) {
             CameraActivity.CameraPreviewListener eventListener;
-            final int quality = 10;
+            final int quality = 85;
             camera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] bytes, Camera camera) {

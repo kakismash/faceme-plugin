@@ -107,13 +107,14 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
   }
 
   /**
-  * Open the camera to start scanning.
-  * @param x              Position X. If you want to use the default value you can add 0.         
-  * @param y              Position Y. If you want to use the default value you can add 0.
-  * @param width          Camera width. If you want to use the default value you can add 0.
-  * @param height         Camera height. If you want to use the default value you can add 0.
-  * @param paddingBottom  Camera padding bottom. If you want to use the default value you can add 0.
-  * @param position       Camera position (front / back).            
+  * Open the camera.
+  * @param x              The x origin, default 0.        
+  * @param y              The y origin, default 0
+  * @param width          The preview width in pixels, default window.screen.width. Default value 0.
+  * @param height         The preview height in pixels, default window.screen.height. Default value 0.
+  * @param paddingBottom  The preview bottom padding in pixes. Useful to keep the appropriate 
+  *                       preview sizes when orientation changes. Default value 0.
+  * @param position       Choose the camera to use (front / back).            
   */
   async initCamera(options: { x:             number,
                               y:             number,
@@ -139,9 +140,9 @@ export class FaceMeWeb extends WebPlugin implements FaceMePlugin {
 
   /**
   * Take picture.
-  * @param width    Camera width. If you want to use the default value you can add 0.
-  * @param height   Camera height. If you want to use the default value you can add 0.
-  * @param quality  Camera quality. If you want to use the default value you can add 0.          
+  * @param width    The preview width in pixels, default window.screen.width. Default value 0.
+  * @param height   The preview height in pixels, default window.screen.height. Default value 0.
+  * @param quality  The picture quality, 0 - 100, default 85.          
   */
   async takePicture(options: {  width:   number,
                                 height:  number,
